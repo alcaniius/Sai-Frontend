@@ -1,0 +1,289 @@
+
+SAI
+Sistema Ambiental Integrado
+Informe Técnico de Arquitectura y Fases de Desarrollo
+
+Stack: NestJS · Next.js · Flutter · PostgreSQL
+
+Elaborado por: Jaider Hernández Cardozo
+Fecha: Abril 2026
+
+
+1. Resumen ejecutivo
+El SAI (Sistema Ambiental Integrado) es una plataforma SaaS diseñada para automatizar la gestión ambiental, documental y educativa de empresas en Colombia, alineada con las normas ISO 14001 e ISO 9001. El sistema atiende sectores de energía, construcción, industria y servicios, ofreciendo cumplimiento con la normativa colombiana (ANLA, FENOGE).
+
+Propuesta de valor
+• Automatización de Planes de Manejo Ambiental (PMA) y documentación ISO
+• App móvil para generación de informes en inspecciones de campo
+• Panel de control en tiempo real con indicadores ambientales y alertas legales
+• Módulo educativo con cursos, evaluaciones y certificados digitales
+• Integración con normativa colombiana: ANLA, FENOGE, autoridades ambientales
+2. Stack tecnológico
+La selección del stack prioriza consistencia de lenguaje (TypeScript en backend y frontend), escalabilidad desde el MVP, y un equipo pequeño capaz de cubrir todas las capas del sistema.
+
+2.1 Visión general
+Capa
+Tecnología
+Propósito
+Backend
+NestJS + TypeScript
+API REST, WebSockets, lógica de negocio
+Frontend web
+React + Next.js 14
+Dashboard SSR, panel de control
+App móvil
+Flutter + Dart
+Inspecciones de campo, informes
+Base de datos
+PostgreSQL 16
+Persistencia principal, multi-tenant
+Documentos, PDFs, imágenes
+Cola de tareas
+BullMQ
+Generación de docs, notificaciones
+Búsqueda
+Elasticsearch
+Búsqueda de documentos y auditorías
+Complemento
+FastAPI (Python)
+Cálculos de huella de carbono / IA
+2.2 Backend — NestJS
+NestJS es un framework Node.js basado en TypeScript con arquitectura modular inspirada en Angular. Cada uno de los 6 módulos del SAI tiene su propio módulo NestJS independiente, lo que permite escalarlos a microservicios en el futuro sin reescribir código.
+
+• Framework: NestJS 10 + TypeScript 5
+• ORM: Prisma (tipado estático, migraciones automáticas)
+• Autenticación: JWT + OAuth2 + Passport.js
+• Tiempo real: Socket.io para alertas y dashboard
+• Cola de tareas: BullMQ + Redis para generación de PDFs
+• Generación de documentos: Puppeteer (PDF) + docxtemplater (Word)
+• Validación: class-validator + class-transformer
+• Testing: Jest + Supertest
+
+2.3 Frontend web — React + Next.js
+Next.js 14 con App Router permite renderizado del lado del servidor (SSR) para el dashboard de indicadores ambientales, mejorando el rendimiento y el SEO del portal SaaS. Comparte tipos TypeScript directamente con el backend.
+
+• Framework: Next.js 14 (App Router + Server Components)
+• UI: Tailwind CSS + shadcn/ui
+• Gráficas e indicadores: Recharts
+• Estado global: Zustand
+• Fetching y caché: TanStack Query
+• Formularios: React Hook Form + Zod
+• Tiempo real: Socket.io client
+• Generación de reportes PDF en cliente: React-PDF
+
+2.4 App móvil — Flutter
+Flutter permite construir apps nativas iOS y Android desde una sola base de código Dart. Para el SAI, la app es el diferenciador clave: permite que los profesionales ambientales generen informes de campo directamente desde el sitio de inspección, con soporte offline.
+
+• Framework: Flutter 3.x + Dart 3
+• Gestión de estado: Riverpod 2
+• Persistencia offline: Drift (SQLite tipado)
+• Sincronización offline/online: estrategia queue-and-sync
+• Cámara e imágenes: image_picker + camera
+• Mapas y geolocalización: Google Maps Flutter + geolocator
+• Generación de PDF en campo: pdf package
+• Notificaciones push: Firebase Cloud Messaging
+
+2.5 Base de datos — PostgreSQL
+PostgreSQL 16 soporta el modelo multi-tenant mediante esquemas separados por organización. Cada empresa tiene su propio schema (empresa_abc.documentos, empresa_abc.indicadores), garantizando aislamiento de datos sin complejidad de despliegue adicional.
+
+• Motor: PostgreSQL 16
+• Multi-tenancy: un schema por organización
+• JSONB: para matrices de aspectos e impactos (estructura dinámica)
+• Full-text search nativo para búsqueda básica de documentos
+• Row-level security (RLS) como capa adicional de aislamiento
+• Backups: pg_dump automatizado + replicación en producción
+
+
+3. Arquitectura del sistema
+3.1 Patrón arquitectónico — Monolito modular
+El SAI se construye inicialmente como un monolito modular: un solo repositorio y deploy, pero con los 6 módulos estrictamente separados por dominio. Este patrón es óptimo para equipos pequeños en etapas tempranas, y permite extraer módulos como microservicios independientes cuando el producto escale sin reescribir código.
+
+Ventajas del monolito modular para SAI
+• Un solo pipeline CI/CD — menor overhead operacional para equipo pequeño
+• Tipado compartido entre módulos sin contratos de API intermedios
+• Transacciones de base de datos entre módulos sin llamadas HTTP
+• Extracción incremental a microservicios cuando el negocio lo requiera
+3.2 Capas del sistema
+La arquitectura sigue un modelo de capas donde cada nivel tiene responsabilidades bien definidas:
+
+Capa de presentación
+• Web: Next.js (SSR + App Router) para dashboard, gestión documental y módulo educativo
+• Móvil: Flutter para inspecciones de campo, generación de informes y notificaciones
+• Comunicación: REST para operaciones CRUD, WebSockets para alertas en tiempo real
+Capa de aplicación (NestJS)
+• Módulo Documental: versiones, firmas digitales, control de vencimientos
+• Módulo Ambiental: matriz de aspectos, PMA, PGIRHS, huella de carbono
+• Módulo de Calidad: no conformidades, auditorías internas/externas, ISO 9001
+• Módulo Educativo: LMS, cursos, evaluaciones automáticas, certificados
+• Panel de Control: indicadores en tiempo real, alertas legales, cronogramas
+• Automatización: generación de PMA, matrices, procedimientos, informes
+Capa de servicios transversales
+• BullMQ: cola de tareas para generación asíncrona de documentos pesados
+• Redis: caché de dashboards, sesiones de usuario, datos de tiempo real
+• Elasticsearch: búsqueda full-text en documentos, auditorías y procedimientos
+• Nodemailer / FCM: notificaciones por email y push móvil
+Capa de datos
+• PostgreSQL: persistencia principal con esquemas por organización (multi-tenant)
+• S3 / MinIO: almacenamiento de archivos (PDFs, documentos Word, imágenes de campo)
+• Prisma: ORM con tipado estático y migraciones versionadas
+3.3 Modelo multi-tenant
+Cada empresa que contrate el SAI recibe un schema PostgreSQL independiente. El middleware de NestJS identifica la organización por subdominio o header, y Prisma conecta dinámicamente al schema correspondiente. Este enfoque garantiza aislamiento sin los costos de infraestructura de bases de datos separadas.
+
+• Identificación de tenant: subdominio (empresa-abc.sai.co) o header X-Tenant-ID
+• Provisioning automático al registrar una organización nueva
+• Migraciones aplicadas a todos los schemas simultáneamente
+• Datos sensibles cifrados a nivel de columna con pgcrypto
+
+
+4. Módulos del sistema
+Módulo 1 — Gestión documental
+• Control de versiones con historial completo de cambios
+• Firma digital integrada (PDFLib + proveedor externo opcional)
+• Alertas automáticas de vencimiento de documentos
+• Flujo de aprobaciones configurable por tipo de documento
+• Trazabilidad completa: quién creó, modificó y aprobó cada versión
+
+Módulo 2 — Ambiental (ISO 14001)
+• Matriz de aspectos e impactos ambientales con ciclo de vida del proyecto
+• Plan de Manejo Ambiental (PMA) generado automáticamente
+• Plan de Gestión Integral de Residuos Generados (PGIRHS)
+• Programas: orden y aseo, ahorro de recursos (agua, energía, papel)
+• Programa de huella de carbono con cálculo automatizado (FastAPI/Python)
+• Cronograma y sistema de alertas para reportes ante autoridades (ANLA)
+• Informes exportables en PDF y Word para autoridades ambientales
+
+Módulo 3 — Calidad (ISO 9001)
+• Control de procesos y actualización normativa
+• Registro y seguimiento de no conformidades de auditorías
+• Gestión de auditorías internas y externas con evidencias
+• Indicadores de desempeño ambiental y de calidad
+
+Módulo 4 — Educativo (LMS)
+• Cursos virtuales con contenido multimedia (video, documentos, quizzes)
+• Evaluaciones automáticas con banco de preguntas por módulo
+• Certificados digitales con código QR verificable
+• Seguimiento individual por trabajador: progreso, historial, vencimientos
+
+Módulo 5 — Panel de control
+• Dashboard en tiempo real con WebSockets (Socket.io)
+• Indicadores: cumplimiento legal, estado de documentos, alertas activas
+• Gráficas de tendencia para indicadores ambientales
+• Cronograma visual de reportes ante autoridades ambientales
+
+Módulo 6 — Automatización de documentos
+• Generación de PMA completo a partir de datos de la empresa y el proyecto
+• Matrices de aspectos, riesgos y requisitos legales
+• Procedimientos e instructivos desde plantillas configurables
+• Informes ambientales periódicos con datos tomados del sistema
+
+
+5. Fases de desarrollo
+El desarrollo del SAI se organiza en 5 fases iterativas. Cada fase entrega valor funcional independiente, permitiendo validar con clientes reales antes de avanzar a la siguiente.
+
+Fase
+Duración
+Entregables
+Tecnologías
+Fase 1
+8 semanas
+Infraestructura base, auth, multi-tenant, módulo documental básico
+NestJS, Prisma, PostgreSQL, Next.js
+Fase 2
+8 semanas
+Módulo ambiental completo, generación PMA, huella de carbono
+NestJS, FastAPI, BullMQ, Puppeteer
+Fase 3
+6 semanas
+App Flutter, inspecciones de campo, informes offline/online
+Flutter, Drift, Google Maps, FCM
+Fase 4
+6 semanas
+Módulo educativo LMS, módulo de calidad, certificados digitales
+Next.js, BullMQ, QR, Socket.io
+Fase 5
+4 semanas
+Panel de control tiempo real, alertas automáticas, automatización
+Recharts, Socket.io, Elasticsearch
+Fase 1 — Fundamentos (semanas 1-8)
+Objetivo: tener el sistema andando con autenticación, multi-tenancy y el primer módulo productivo.
+
+• Semana 1-2: Configuración de infraestructura (Docker, PostgreSQL, Redis, CI/CD con GitHub Actions)
+• Semana 3-4: Autenticación JWT + OAuth2, sistema de roles y permisos, provisioning de tenants
+• Semana 5-6: Módulo documental — carga, versiones, control de aprobaciones
+• Semana 7-8: Frontend Next.js — portal de login, gestión de documentos, alertas de vencimiento
+
+Fase 2 — Núcleo ambiental (semanas 9-16)
+Objetivo: módulo ambiental operativo con generación automática de PMA, diferenciador central del SAI.
+
+• Semana 9-10: Matriz de aspectos e impactos (JSONB en PostgreSQL, UI dinámica en Next.js)
+• Semana 11-12: Generación automática de PMA (BullMQ + Puppeteer, plantillas configurables)
+• Semana 13-14: Microservicio de huella de carbono (FastAPI + Python), PGIRHS
+• Semana 15-16: Cronograma de reportes ANLA, alertas automáticas por email, módulo de calidad básico
+
+Fase 3 — App móvil Flutter (semanas 17-22)
+Objetivo: app de inspecciones de campo como diferenciador de mercado frente a competidores.
+
+• Semana 17-18: Estructura Flutter, autenticación, sincronización con API NestJS
+• Semana 19-20: Formularios de inspección offline (Drift), cámara, geolocalización
+• Semana 21-22: Generación de informes PDF en campo, sincronización automática al recuperar conexión
+
+Fase 4 — LMS y calidad (semanas 23-28)
+Objetivo: módulo educativo completo y módulo de calidad con auditorías.
+
+• Semana 23-24: LMS — estructura de cursos, carga de contenido multimedia, banco de preguntas
+• Semana 25-26: Evaluaciones automáticas, seguimiento por trabajador, certificados con QR
+• Semana 27-28: No conformidades, gestión de auditorías internas/externas, indicadores de calidad
+
+Fase 5 — Panel de control y automatización (semanas 29-32)
+Objetivo: dashboard ejecutivo en tiempo real y automatización completa de documentos.
+
+• Semana 29-30: Panel de control con WebSockets — indicadores en tiempo real, alertas activas
+• Semana 31-32: Automatización avanzada de documentos, búsqueda Elasticsearch, optimización de performance
+
+
+6. Infraestructura y DevOps
+El SAI se despliega en contenedores Docker orquestados con un compose para desarrollo y Kubernetes para producción. El pipeline CI/CD automatiza pruebas, build y despliegue en cada push a main.
+
+6.1 Entornos
+• Desarrollo local: Docker Compose (NestJS + Next.js + PostgreSQL + Redis + MinIO)
+• Staging: AWS ECS o GCP Cloud Run — despliegue automático en cada PR aprobado
+• Producción: Kubernetes (EKS/GKE) con auto-scaling por módulo
+
+6.2 CI/CD — GitHub Actions
+• En cada PR: lint, tests unitarios, tests de integración, build de imágenes Docker
+• En merge a main: deploy automático a staging
+• En tag de versión: deploy a producción con aprobación manual
+• Migraciones de base de datos ejecutadas automáticamente en deploy
+
+6.3 Monitoreo
+• Sentry: tracking de errores en backend, frontend y Flutter
+• Datadog / Grafana: métricas de performance, latencia de API, uso de recursos
+• Alertas automáticas por email y Slack para errores críticos en producción
+
+7. Consideraciones de seguridad
+• Autenticación: JWT con refresh tokens rotativos + OAuth2 para SSO empresarial
+• Autorización: RBAC (Role-Based Access Control) granular por módulo y acción
+• Multi-tenant: Row-Level Security en PostgreSQL como segunda capa de aislamiento
+• Cifrado en tránsito: TLS 1.3 obligatorio en todas las comunicaciones
+• Cifrado en reposo: datos sensibles con pgcrypto, archivos cifrados en S3
+• Firma digital de documentos: hash SHA-256 + timestamp de autoridad certificadora
+• Auditoría: log inmutable de todas las acciones sobre documentos y datos ambientales
+
+8. Conclusión
+El stack NestJS + Next.js + Flutter + PostgreSQL es la combinación más eficiente para el SAI dado el contexto del proyecto: equipo pequeño, múltiples plataformas (web y móvil), y necesidad de escalar un SaaS en Colombia.
+
+TypeScript como lenguaje unificador en backend y frontend elimina la fricción de mantener contratos de tipos en múltiples lenguajes. Flutter aporta la app móvil nativa que es el diferenciador clave del producto para el mercado colombiano. PostgreSQL con esquemas por tenant es la base más sólida para un modelo SaaS con múltiples organizaciones.
+
+El plan de 32 semanas entrega valor incremental en cada fase, permitiendo lanzar un MVP comercializable al finalizar la Fase 2 (semana 16) con los módulos documental y ambiental operativos — los de mayor demanda en el mercado objetivo.
+
+Hitos clave
+• Semana 8:  MVP interno — autenticación, multi-tenant, módulo documental
+• Semana 16: MVP comercial — módulo ambiental, generación de PMA, ANLA
+• Semana 22: Lanzamiento diferenciador — app de inspecciones de campo Flutter
+• Semana 28: Plataforma completa — LMS, calidad, certificados digitales
+• Semana 32: SAI v1.0 — panel en tiempo real, automatización total
+— Fin del informe técnico —
+SAI — Sistema Ambiental Integrado   |   Informe Técnico
+
+Confidencial — Yina Montero Villadiego, Ing. Ambiental	Pág. 1
+
