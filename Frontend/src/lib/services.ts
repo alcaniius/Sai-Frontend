@@ -13,6 +13,67 @@ export interface RegisterInput {
   organizationId?: string;
 }
 
+export type DocType = 'PMA' | 'MATRIX' | 'PROCEDURE' | 'INSTRUCTION' | 'REPORT' | 'CERTIFICATE' | 'OTHER';
+export type DocStatus = 'DRAFT' | 'IN_REVIEW' | 'APPROVED' | 'REJECTED' | 'ARCHIVED';
+
+export interface Document {
+  id: string;
+  title: string;
+  description?: string;
+  type: DocType;
+  status: DocStatus;
+  version: number;
+  filePath?: string;
+  fileFormat?: string;
+  fileSize?: number;
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateDocumentInput {
+  title: string;
+  description?: string;
+  type: DocType;
+  dueDate?: string;
+  file?: File;
+}
+
+export type OperationCondition = 'NORMAL' | 'ABNORMAL' | 'EMERGENCY';
+export type AspectCharacter = 'POSITIVE' | 'NEGATIVE';
+export type SignificanceLevel = 'HIGH_SIGNIFICANCE' | 'MEDIUM_SIGNIFICANCE' | 'LOW_SIGNIFICANCE' | 'NOT_SIGNIFICANT';
+
+export interface EnvironmentalAspectInput {
+  process: string;
+  activity: string;
+  operationCondition: OperationCondition;
+  aspectType: string;
+  aspectDescription?: string;
+  impactDescription?: string;
+  character: AspectCharacter;
+  legalExistence: number;
+  legalCompliance: number;
+  frequency: number;
+  dangerousness: number;
+  magnitude: number;
+  stakeholderDemand: number;
+  stakeholderMgmt: number;
+  controls?: string;
+  active?: boolean;
+}
+
+export interface EnvironmentalAspect extends EnvironmentalAspectInput {
+  id: string;
+  legalScore: number;
+  environmentalScore: number;
+  stakeholderScore: number;
+  significanceTotal: number;
+  significanceLevel: SignificanceLevel;
+  organizationId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const authService = {
   async login(data: LoginInput) {
     const response = await api.post('/auth/login', data);
@@ -31,57 +92,189 @@ export const authService = {
 };
 
 export const documentsService = {
-  async getAll() {
+  async getAll(): Promise<Document[]> {
     const response = await api.get('/documents');
     return response.data;
   },
 
-  async getById(id: string) {
+  async getById(id: string): Promise<Document> {
     const response = await api.get(`/documents/${id}`);
     return response.data;
   },
 
-  async create(data: any) {
-    const response = await api.post('/documents', data);
+  async create(data: CreateDocumentInput): Promise<Document> {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('type', data.type);
+    if (data.description) formData.append('description', data.description);
+    if (data.dueDate) formData.append('dueDate', data.dueDate);
+    if (data.file) formData.append('file', data.file);
+
+    const response = await api.post('/documents', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return response.data;
   },
 
-  async update(id: string, data: any) {
+  async update(id: string, data: Partial<CreateDocumentInput>): Promise<Document> {
     const response = await api.patch(`/documents/${id}`, data);
     return response.data;
   },
 
-  async delete(id: string) {
-    const response = await api.delete(`/documents/${id}`);
-    return response.data;
+  async delete(id: string): Promise<void> {
+    await api.delete(`/documents/${id}`);
   },
 
   async approve(id: string, action: 'APPROVED' | 'REJECTED', comment?: string) {
     const response = await api.post(`/documents/${id}/approve`, { action, comment });
     return response.data;
   },
+
+  async getDownloadUrl(id: string): Promise<{ url: string; expiresInSeconds: number }> {
+    const response = await api.get(`/documents/${id}/download-url`);
+    return response.data;
+  },
+};
+
+export interface Alert {
+  id: string;
+  type: string;
+  message: string;
+  priority: string;
+  read: boolean;
+  createdAt: string;
+}
+
+export const alertsService = {
+  getAll: async (): Promise<Alert[]> => {
+    const response = await api.get('/alerts');
+    return response.data;
+  },
+  markAsRead: async (id: string): Promise<void> => {
+    await api.patch(`/alerts/${id}/read`);
+  },
+};
+
+export interface Site {
+  id: string;
+  name: string;
+  code: string;
+  address?: string;
+  municipality?: string;
+  active: boolean;
+}
+
+export const sitesService = {
+  getAll: async (): Promise<Site[]> => {
+    const response = await api.get('/sites');
+    return response.data;
+  },
+};
+
+export interface WasteRecord {
+  id: string;
+  siteId: string;
+  year: number;
+  month: number;
+  entries: WasteEntry[];
+}
+
+export interface WasteEntry {
+  id: string;
+  day: number;
+  ordinary: number;
+}
+
+export const wasteService = {
+  getRecords: async (): Promise<WasteRecord[]> => {
+    const response = await api.get('/waste/records');
+    return response.data;
+  },
+};
+
+export interface CarbonFootprint {
+  id: string;
+  organization: string;
+  period: string;
+  co2Emissions: number;
+  scope1: number;
+  scope2: number;
+  scope3: number;
+}
+
+export interface CreateCarbonFootprintInput {
+  organization: string;
+  period: string;
+  co2Emissions: number;
+  scope1: number;
+  scope2: number;
+  scope3: number;
+}
+
+export const carbonFootprintService = {
+  getAll: async (): Promise<CarbonFootprint[]> => {
+    const response = await api.get('/carbon-footprint');
+    return response.data;
+  },
+  create: async (data: CreateCarbonFootprintInput): Promise<CarbonFootprint> => {
+    const response = await api.post('/carbon-footprint', data);
+    return response.data;
+  },
+};
+
+export interface InspectionTemplate {
+  id: string;
+  code: string;
+  name: string;
+  description?: string;
+  frequency: string;
+}
+
+export interface InspectionItem {
+  id: string;
+  templateId: string;
+  description: string;
+  order: number;
+}
+
+export interface InspectionRecord {
+  id: string;
+  templateId: string;
+  siteId: string;
+  date: string;
+  score?: number;
+}
+
+export const inspectionsService = {
+  getTemplates: async (): Promise<InspectionTemplate[]> => {
+    const response = await api.get('/inspections/templates');
+    return response.data;
+  },
+  getRecords: async (): Promise<InspectionRecord[]> => {
+    const response = await api.get('/inspections/records');
+    return response.data;
+  },
 };
 
 export const environmentalService = {
-  getAspects: async () => {
+  getAspects: async (): Promise<EnvironmentalAspect[]> => {
     const response = await api.get('/environmental/aspects');
     return response.data;
   },
-  getAspectById: async (id: string) => {
+  getAspectById: async (id: string): Promise<EnvironmentalAspect> => {
     const response = await api.get(`/environmental/aspects/${id}`);
     return response.data;
   },
-  createAspect: async (data: any) => {
+  createAspect: async (data: EnvironmentalAspectInput): Promise<EnvironmentalAspect> => {
     const response = await api.post('/environmental/aspects', data);
     return response.data;
   },
-  updateAspect: async (id: string, data: any) => {
+  updateAspect: async (id: string, data: Partial<EnvironmentalAspectInput>): Promise<EnvironmentalAspect> => {
     const response = await api.patch(`/environmental/aspects/${id}`, data);
     return response.data;
   },
-  deleteAspect: async (id: string) => {
-    const response = await api.delete(`/environmental/aspects/${id}`);
-    return response.data;
+  deleteAspect: async (id: string): Promise<void> => {
+    await api.delete(`/environmental/aspects/${id}`);
   },
   recalculateSignificance: async (id: string) => {
     const response = await api.post(`/environmental/aspects/${id}/significance`);

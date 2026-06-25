@@ -44,10 +44,14 @@ describe('documentsService', () => {
     expect(api.get).toHaveBeenCalledWith('/documents');
   });
 
-  it('create should call POST /documents', async () => {
+  it('create should call POST /documents with FormData', async () => {
     (api.post as any).mockResolvedValue({ data: {} });
-    await documentsService.create({ title: 'Test' });
-    expect(api.post).toHaveBeenCalledWith('/documents', { title: 'Test' });
+    await documentsService.create({ title: 'Test', type: 'PMA' });
+    expect(api.post).toHaveBeenCalledWith(
+      '/documents',
+      expect.any(FormData),
+      expect.objectContaining({ headers: { 'Content-Type': 'multipart/form-data' } }),
+    );
   });
 
   it('delete should call DELETE /documents/:id', async () => {
@@ -68,7 +72,21 @@ describe('environmentalService', () => {
 
   it('createAspect should call POST /environmental/aspects', async () => {
     (api.post as any).mockResolvedValue({ data: {} });
-    await environmentalService.createAspect({ name: 'Test' });
-    expect(api.post).toHaveBeenCalledWith('/environmental/aspects', { name: 'Test' });
+    const payload = {
+      process: 'Gestión',
+      activity: 'Atención',
+      operationCondition: 'NORMAL' as const,
+      aspectType: 'Consumo de energía',
+      character: 'NEGATIVE' as const,
+      legalExistence: 10,
+      legalCompliance: 10,
+      frequency: 10,
+      dangerousness: 5,
+      magnitude: 5,
+      stakeholderDemand: 1,
+      stakeholderMgmt: 1,
+    };
+    await environmentalService.createAspect(payload);
+    expect(api.post).toHaveBeenCalledWith('/environmental/aspects', payload);
   });
 });
