@@ -259,11 +259,14 @@ export interface InspectionTemplate {
   name: string;
   description?: string;
   frequency: string;
+  programId?: string;
+  items?: InspectionItem[];
 }
 
 export interface InspectionItem {
   id: string;
   templateId: string;
+  category?: string;
   description: string;
   order: number;
 }
@@ -274,6 +277,26 @@ export interface InspectionRecord {
   siteId: string;
   date: string;
   score?: number;
+  inspectorName: string;
+  supervisorName?: string;
+  site?: Site;
+}
+
+export interface CreateInspectionRecordInput {
+  templateId: string;
+  siteId: string;
+  inspectorName: string;
+  supervisorName?: string;
+  date: string;
+  observations?: string;
+}
+
+export interface SubmitResponsesInput {
+  responses: Array<{
+    itemId: string;
+    status: 'COMPLIANT' | 'NON_COMPLIANT' | 'NOT_APPLICABLE';
+    observation?: string;
+  }>;
 }
 
 export const inspectionsService = {
@@ -281,8 +304,20 @@ export const inspectionsService = {
     const response = await api.get('/inspections/templates');
     return response.data;
   },
+  getTemplateById: async (id: string): Promise<InspectionTemplate> => {
+    const response = await api.get(`/inspections/templates/${id}`);
+    return response.data;
+  },
   getRecords: async (): Promise<InspectionRecord[]> => {
     const response = await api.get('/inspections/records');
+    return response.data;
+  },
+  createRecord: async (data: CreateInspectionRecordInput): Promise<InspectionRecord> => {
+    const response = await api.post('/inspections/records', data);
+    return response.data;
+  },
+  submitResponses: async (recordId: string, data: SubmitResponsesInput) => {
+    const response = await api.post(`/inspections/records/${recordId}/responses`, data);
     return response.data;
   },
 };
