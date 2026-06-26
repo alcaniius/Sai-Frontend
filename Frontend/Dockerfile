@@ -3,20 +3,20 @@
 # ============================================
 
 # Stage 1: Dependencies
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 
 # Instalar pnpm
 RUN corepack enable pnpm
 
 # Copiar archivos de dependencias
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
 
 # Instalar dependencias
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: Builder
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Instalar pnpm
@@ -27,14 +27,21 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Pasar variables de entorno para el build
-ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_API_URL=http://backsai.jjsoftech.com/api/v1
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 # Build de Next.js
 RUN pnpm build
 
+# Aplanar standalone (mover contenido del subdirectorio a la raíz)
+RUN wrapper=$(ls -d .next/standalone/*/ | head -1) && \
+    mv $wrapper* .next/standalone/ 2>/dev/null; \
+    mv $wrapper.[!.]* .next/standalone/ 2>/dev/null; \
+    rmdir $wrapper 2>/dev/null; \
+    true
+
 # Stage 3: Producción
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 # Crear usuario no-root

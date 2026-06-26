@@ -1,0 +1,13 @@
+{
+  "title": "SAI - Backend: Patrones y Convenciones",
+  "summary": "Patrones del backend NestJS: estructura de módulos, Prisma v7 con adapter, DTOs, guards, decoradores, servicios, y quirks críticos como el uso de PrismaPg adapter y Zod v4 message.",
+  "tags": ["sai", "backend", "nestjs", "prisma", "patterns"],
+  "created": "2026-04-19T15:08:00Z",
+  "updated": "2026-04-19T15:08:00Z",
+  "references": [
+    "file:///c:/DEV/SAI/backend/src/app.module.ts",
+    "file:///c:/DEV/SAI/backend/src/main.ts",
+    "file:///c:/DEV/SAI/backend/prisma/schema.prisma",
+    "file:///c:/DEV/SAI/backend/package.json"
+  ]
+}

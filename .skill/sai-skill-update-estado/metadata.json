@@ -1,0 +1,10 @@
+{
+  "title": "SAI - SKILL: Actualizar Estado del Proyecto",
+  "summary": "INSTRUCCIÓN OBLIGATORIA: Después de cada cambio significativo al proyecto SAI, el asistente DEBE actualizar el archivo ESTADO.md siguiendo el protocolo definido en esta skill. Incluye template, checklist de actualización y reglas de qué considerar como cambio significativo.",
+  "tags": ["sai", "skill", "estado", "auto-update", "mandatory"],
+  "created": "2026-04-19T15:11:00Z",
+  "updated": "2026-04-19T15:11:00Z",
+  "references": [
+    "file:///c:/DEV/SAI/ESTADO.md"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": "SAI - Roadmap y Deuda Técnica",
+  "summary": "Análisis detallado de lo que falta por implementar en SAI, deuda técnica identificada, gaps entre el schema y la implementación, y prioridades recomendadas para cada fase.",
+  "tags": ["sai", "roadmap", "technical-debt", "gaps", "priorities"],
+  "created": "2026-04-19T15:12:00Z",
+  "updated": "2026-04-19T15:12:00Z",
+  "references": [
+    "file:///c:/DEV/SAI/ESTADO.md",
+    "file:///c:/DEV/SAI/README.md"
+  ]
+}

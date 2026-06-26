@@ -1,0 +1,10 @@
+{
+  "title": "SAI - Schema de Base de Datos (Prisma)",
+  "summary": "Referencia completa del schema Prisma del proyecto SAI: 20+ modelos organizados en 5 módulos (tenants, documentos, ambiental, calidad, educativo, dashboard). Incluye enums, relaciones y mapeos de tablas.",
+  "tags": ["sai", "database", "prisma", "schema", "models"],
+  "created": "2026-04-19T15:09:00Z",
+  "updated": "2026-04-19T15:09:00Z",
+  "references": [
+    "file:///c:/DEV/SAI/backend/prisma/schema.prisma"
+  ]
+}

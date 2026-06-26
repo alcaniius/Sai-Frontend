@@ -1,0 +1,13 @@
+{
+  "title": "SAI - API Endpoints Completos",
+  "summary": "Referencia completa de todos los endpoints REST del backend SAI, incluyendo métodos HTTP, rutas, permisos RBAC, DTOs esperados y respuestas.",
+  "tags": ["sai", "api", "endpoints", "rest", "rbac"],
+  "created": "2026-04-19T15:10:00Z",
+  "updated": "2026-04-19T15:10:00Z",
+  "references": [
+    "file:///c:/DEV/SAI/backend/src/modules/auth/auth.controller.ts",
+    "file:///c:/DEV/SAI/backend/src/modules/users/users.controller.ts",
+    "file:///c:/DEV/SAI/backend/src/modules/documents/documents.controller.ts",
+    "file:///c:/DEV/SAI/backend/src/modules/environmental/environmental.controller.ts"
+  ]
+}

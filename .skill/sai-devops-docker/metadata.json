@@ -1,0 +1,13 @@
+{
+  "title": "SAI - DevOps, Docker y Despliegue",
+  "summary": "Configuración de Docker Compose (PostgreSQL, Redis, MinIO, Backend, Frontend), Dockerfiles multi-stage, guía de despliegue en Dokploy, health checks y variables de entorno de producción.",
+  "tags": ["sai", "devops", "docker", "dokploy", "deployment"],
+  "created": "2026-04-19T15:11:00Z",
+  "updated": "2026-04-19T15:11:00Z",
+  "references": [
+    "file:///c:/DEV/SAI/docker-compose.yml",
+    "file:///c:/DEV/SAI/backend/Dockerfile",
+    "file:///c:/DEV/SAI/Frontend/Dockerfile",
+    "file:///c:/DEV/SAI/DOKPLOY_GUIDE.md"
+  ]
+}

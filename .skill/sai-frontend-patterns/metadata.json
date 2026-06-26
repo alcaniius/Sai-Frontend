@@ -1,0 +1,13 @@
+{
+  "title": "SAI - Frontend: Patrones y Convenciones",
+  "summary": "Patrones del frontend Next.js 16: estructura de páginas App Router, componentes, Zustand store, API client con interceptores Axios, servicios, y convenciones de formularios con React Hook Form + Zod v4.",
+  "tags": ["sai", "frontend", "nextjs", "react", "zustand", "patterns"],
+  "created": "2026-04-19T15:09:00Z",
+  "updated": "2026-04-19T15:09:00Z",
+  "references": [
+    "file:///c:/DEV/SAI/Frontend/src/lib/api.ts",
+    "file:///c:/DEV/SAI/Frontend/src/lib/services.ts",
+    "file:///c:/DEV/SAI/Frontend/src/store/authStore.ts",
+    "file:///c:/DEV/SAI/Frontend/package.json"
+  ]
+}

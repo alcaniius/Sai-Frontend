@@ -1,0 +1,12 @@
+{
+  "title": "SAI - Resumen General del Proyecto",
+  "summary": "Resumen ejecutivo del proyecto SAI (Sistema Ambiental Integrado): plataforma SaaS para gestión ambiental, documental y educativa. Incluye arquitectura, stack tecnológico, fases del proyecto, estructura de directorios y estado actual.",
+  "tags": ["sai", "overview", "architecture", "project-status"],
+  "created": "2026-04-19T15:08:00Z",
+  "updated": "2026-04-19T15:08:00Z",
+  "references": [
+    "file:///c:/DEV/SAI/README.md",
+    "file:///c:/DEV/SAI/ESTADO.md",
+    "file:///c:/DEV/SAI/QUICKSTART.md"
+  ]
+}
