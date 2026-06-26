@@ -10,7 +10,7 @@ export const api = axios.create({
   },
 });
 
-// Request interceptor para agregar token
+// Request interceptor para agregar token y tenant
 api.interceptors.request.use((config) => {
   const state = useAuthStore.getState();
   const token = state.accessToken;
@@ -18,10 +18,13 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  // Agregar tenant ID si está disponible
-  const tenantId = state.user?.id;
-  if (tenantId) {
-    config.headers['X-Tenant-ID'] = tenantId;
+  // Use user's organizationId as tenant header (fix: was using user.id which is wrong)
+  // Do NOT override if caller already set X-Tenant-ID (admin per-request override)
+  if (!config.headers['X-Tenant-ID']) {
+    const tenantId = state.user?.organizationId;
+    if (tenantId) {
+      config.headers['X-Tenant-ID'] = tenantId;
+    }
   }
 
   return config;
@@ -71,5 +74,29 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// ---- API Functions ----
+
+export interface CreateUserPayload {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  organizationId?: string;
+  siteId?: string;
+}
+
+export function createUser(data: CreateUserPayload) {
+  return api.post('/users', data);
+}
+
+export function fetchOrganizations() {
+  return api.get('/users/organizations');
+}
+
+export function fetchSitesByOrg(orgId: string) {
+  return api.get('/sites', { params: { organizationId: orgId } });
+}
 
 export default api;

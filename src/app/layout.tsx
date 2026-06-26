@@ -11,6 +11,15 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "SAI - Sistema Ambiental Integrado",
   description: "Plataforma SaaS para gestión ambiental, documental y educativa",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
+  openGraph: {
+    title: "SAI - Sistema Ambiental Integrado",
+    description: "Plataforma SaaS para gestión ambiental, documental y educativa",
+    images: [{ url: "/og-image.svg", width: 1200, height: 630 }],
+  },
 };
 
 export default function RootLayout({

@@ -5,6 +5,7 @@ import {
   ShieldCheck,
   GraduationCap,
   BarChart3,
+  Users,
   LucideIcon,
 } from 'lucide-react';
 
@@ -29,6 +30,7 @@ export const navigation: NavigationItem[] = [
   { name: 'Calidad', href: '/dashboard/quality', icon: ShieldCheck, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR] },
   { name: 'Educativo', href: '/dashboard/education', icon: GraduationCap, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR] },
   { name: 'Indicadores', href: '/dashboard/indicators', icon: BarChart3, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR] },
+  { name: 'Usuarios', href: '/dashboard/admin/usuarios', icon: Users, roles: [Role.ADMIN] },
 ];
 
 export function filterNavigationByRole(items: NavigationItem[], role?: Role): NavigationItem[] {
