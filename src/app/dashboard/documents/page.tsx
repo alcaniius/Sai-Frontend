@@ -558,9 +558,11 @@ export default function DocumentsPage() {
                           return (
                             <tr
                               key={doc.id}
+                              onClick={() => doc.filePath && setPreviewDocument(doc)}
                               style={{
                                 background: 'var(--sai-bg-card)',
                                 borderBottom: idx < programDocs.length - 1 ? '1px solid var(--sai-border-subtle)' : 'none',
+                                cursor: doc.filePath ? 'pointer' : 'default',
                               }}
                               onMouseEnter={(e) => e.currentTarget.style.background = 'var(--sai-bg-hover)'}
                               onMouseLeave={(e) => e.currentTarget.style.background = 'var(--sai-bg-card)'}
@@ -593,16 +595,7 @@ export default function DocumentsPage() {
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className="text-sm" style={{ color: 'var(--sai-text-primary)' }}>v{doc.version}</span>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                {doc.filePath && (
-                                  <button
-                                    onClick={() => setPreviewDocument(doc)}
-                                    style={{ color: 'var(--sai-accent)' }}
-                                    className="mr-1.5"
-                                  >
-                                    Ver
-                                  </button>
-                                )}
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2" onClick={(e) => e.stopPropagation()}>
                                 <button onClick={() => setEditingDocument(doc)} style={{ color: 'var(--sai-accent)' }} className="mr-1.5">Editar</button>
                                 <button onClick={() => deleteMutation.mutate(doc.id)} style={{ color: 'var(--sai-danger)' }}>Eliminar</button>
                               </td>
@@ -645,9 +638,11 @@ export default function DocumentsPage() {
                         return (
                           <tr
                             key={doc.id}
+                            onClick={() => doc.filePath && setPreviewDocument(doc)}
                             style={{
                               background: 'var(--sai-bg-card)',
                               borderBottom: idx < noProgramInfoDocs.length - 1 ? '1px solid var(--sai-border-subtle)' : 'none',
+                              cursor: doc.filePath ? 'pointer' : 'default',
                             }}
                             onMouseEnter={(e) => e.currentTarget.style.background = 'var(--sai-bg-hover)'}
                             onMouseLeave={(e) => e.currentTarget.style.background = 'var(--sai-bg-card)'}
@@ -663,7 +658,7 @@ export default function DocumentsPage() {
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="text-sm" style={{ color: 'var(--sai-text-primary)' }}>{doc.category || doc.type}</span>
+                              <span className="text-sm" style={{ color: 'var(--sai-text-primary)' }}>{docLabel(doc)}</span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded-full" style={{ background: status.bg, color: status.text }}>
@@ -671,7 +666,7 @@ export default function DocumentsPage() {
                                 {doc.status}
                               </span>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2" onClick={(e) => e.stopPropagation()}>
                               <button onClick={() => setEditingDocument(doc)} style={{ color: 'var(--sai-accent)' }} className="mr-1.5">Editar</button>
                               <button onClick={() => deleteMutation.mutate(doc.id)} style={{ color: 'var(--sai-danger)' }}>Eliminar</button>
                             </td>
