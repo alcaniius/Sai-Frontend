@@ -6,6 +6,7 @@ import { documentsService, programsService, inspectionsService, CreateDocumentIn
 import { DocumentModal } from '@/components/documents/DocumentModal';
 import { InspectionDetailModal } from '@/components/documents/InspectionDetailModal';
 import { ChecklistPickerModal } from '@/components/documents/ChecklistPickerModal';
+import { DocumentPreviewModal } from '@/components/documents/DocumentPreviewModal';
 import { Plus, FileText, Calendar, CheckCircle, XCircle, Clock, FolderOpen, ClipboardList, Play, AlertTriangle, Eye, ClipboardCheck, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
@@ -36,6 +37,34 @@ const frequencyLabels: Record<string, string> = {
   ANNUAL: 'Anual',
 };
 
+const categoryLabels: Record<string, string> = {
+  GUIDE: 'Guía',
+  CHECKLIST_TEMPLATE: 'Plantilla',
+  DATA_FORMAT: 'Formato',
+  CERTIFICATE: 'Certificado',
+  REPORT: 'Informe',
+};
+
+const typeLabels: Record<string, string> = {
+  PLAN: 'Plan',
+  PROGRAM: 'Programa',
+  PROTOCOL: 'Protocolo',
+  INSTRUCTIVE: 'Instructivo',
+  MATRIX: 'Matriz',
+  FORMAT: 'Formato',
+  CHECKLIST: 'Checklist',
+  REPORT: 'Informe',
+  CERTIFICATE: 'Certificado',
+  DATA_SHEET: 'Ficha Técnica',
+  INDICATOR: 'Indicador',
+  SCHEDULE: 'Cronograma',
+  OTHER: 'Otro',
+};
+
+function docLabel(doc: Document): string {
+  return categoryLabels[doc.category] || typeLabels[doc.type] || doc.type || doc.category;
+}
+
 function SectionSkeleton() {
   return (
     <div className="rounded-xl overflow-hidden" style={{ background: 'var(--sai-bg-card)', boxShadow: 'var(--sai-shadow-md)', border: '1px solid var(--sai-border)' }}>
@@ -57,6 +86,7 @@ export default function DocumentsPage() {
   const [showChecklistPicker, setShowChecklistPicker] = useState(false);
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
+  const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
   const [activeTab, setActiveTab] = useState<'forms' | 'docs'>('docs');
 
   const { data: documents, isLoading: docsLoading, isError: docsError } = useQuery({
@@ -549,7 +579,7 @@ export default function DocumentsPage() {
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <span className="text-sm" style={{ color: 'var(--sai-text-primary)' }}>{doc.category || doc.type}</span>
+                                <span className="text-sm" style={{ color: 'var(--sai-text-primary)' }}>{docLabel(doc)}</span>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span
@@ -566,14 +596,7 @@ export default function DocumentsPage() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                 {doc.filePath && (
                                   <button
-                                    onClick={async () => {
-                                      try {
-                                        const response = await documentsService.getDownloadUrl(doc.id);
-                                        window.open(response.url, '_blank');
-                                      } catch (e) {
-                                        alert('Error al obtener la URL del archivo');
-                                      }
-                                    }}
+                                    onClick={() => setPreviewDocument(doc)}
                                     style={{ color: 'var(--sai-accent)' }}
                                     className="mr-1.5"
                                   >
@@ -721,6 +744,12 @@ export default function DocumentsPage() {
         isOpen={!!selectedRecordId}
         onClose={() => setSelectedRecordId(null)}
         recordId={selectedRecordId}
+      />
+
+      <DocumentPreviewModal
+        isOpen={!!previewDocument}
+        onClose={() => setPreviewDocument(null)}
+        document={previewDocument}
       />
     </div>
   );
