@@ -133,6 +133,7 @@ export default function FillInspectionPage() {
     );
   }
 
+  const isSiNo = template.formType === 'CHECKLIST_SI_NO';
   const groupedItems: Record<string, NonNullable<typeof template.items>> = {};
   template.items?.forEach(item => {
     const cat = item.category || 'General';
@@ -232,8 +233,8 @@ export default function FillInspectionPage() {
                         onChange={(e) => handleResponseChange(item.id, 'status', e.target.value as ResponseStatus)}
                         className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
-                        <option value="COMPLIANT">Cumple (C)</option>
-                        <option value="NON_COMPLIANT">No Cumple (NC)</option>
+                        <option value="COMPLIANT">{isSiNo ? 'Sí (SI)' : 'Cumple (C)'}</option>
+                        <option value="NON_COMPLIANT">{isSiNo ? 'No (NO)' : 'No Cumple (NC)'}</option>
                         <option value="NOT_APPLICABLE">No Aplica (NA)</option>
                       </select>
                     </div>

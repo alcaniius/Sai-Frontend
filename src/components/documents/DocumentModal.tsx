@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { X } from 'lucide-react';
-import { CreateDocumentInput, Document, DocType, DocCategory, EnvironmentalProgram } from '@/lib/services';
+import { CreateDocumentInput, Document, DocType, DocCategory, EnvironmentalProgram, InspectionTemplate } from '@/lib/services';
 
 const docTypeValues: DocType[] = ['PLAN', 'PROGRAM', 'PROTOCOL', 'INSTRUCTIVE', 'MATRIX', 'FORMAT', 'CHECKLIST', 'REPORT', 'CERTIFICATE', 'DATA_SHEET', 'INDICATOR', 'SCHEDULE', 'OTHER'];
 const docCategoryValues: DocCategory[] = ['GUIDE', 'CHECKLIST_TEMPLATE', 'DATA_FORMAT', 'CERTIFICATE', 'REPORT'];
@@ -16,6 +16,7 @@ const documentSchema = z.object({
   type: z.enum(docTypeValues as [string, ...string[]], { message: 'Selecciona un tipo de documento' }),
   category: z.enum(docCategoryValues as [string, ...string[]]).optional(),
   programId: z.string().optional(),
+  linkedTemplateId: z.string().optional(),
   description: z.string().optional(),
   dueDate: z.string().optional(),
 });
@@ -28,9 +29,10 @@ interface DocumentModalProps {
   onSubmit: (data: CreateDocumentInput, file?: File) => Promise<void>;
   document?: Document | null;
   programs: EnvironmentalProgram[];
+  templates: InspectionTemplate[];
 }
 
-export function DocumentModal({ isOpen, onClose, onSubmit, document, programs }: DocumentModalProps) {
+export function DocumentModal({ isOpen, onClose, onSubmit, document, programs, templates }: DocumentModalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -46,6 +48,7 @@ export function DocumentModal({ isOpen, onClose, onSubmit, document, programs }:
       type: undefined,
       category: undefined,
       programId: '',
+      linkedTemplateId: '',
       description: '',
       dueDate: '',
     },
@@ -59,6 +62,7 @@ export function DocumentModal({ isOpen, onClose, onSubmit, document, programs }:
         type: (document?.type as DocType) ?? undefined,
         category: (document?.category as DocCategory) ?? undefined,
         programId: document?.programId ?? '',
+        linkedTemplateId: document?.linkedTemplateId ?? '',
         description: document?.description ?? '',
         dueDate: document?.dueDate ? document.dueDate.slice(0, 10) : '',
       });
@@ -76,6 +80,7 @@ export function DocumentModal({ isOpen, onClose, onSubmit, document, programs }:
         type: data.type as DocType,
         category: data.category as DocCategory,
         programId: data.programId,
+        linkedTemplateId: data.linkedTemplateId || undefined,
         description: data.description,
         dueDate: data.dueDate,
       },
@@ -143,6 +148,27 @@ export function DocumentModal({ isOpen, onClose, onSubmit, document, programs }:
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label htmlFor="linkedTemplateId" className="block text-sm font-medium text-gray-700">
+              Formulario Asociado (Checklist)
+            </label>
+            <select
+              id="linkedTemplateId"
+              {...register('linkedTemplateId')}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="">Ninguno</option>
+              {templates?.map((tpl) => (
+                <option key={tpl.id} value={tpl.id}>
+                  {tpl.code} - {tpl.name}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-xs text-gray-500">
+              Enlaza este documento con una lista de chequeo digital para habilitar su diligenciamiento.
+            </p>
           </div>
           
           <div className="grid grid-cols-2 gap-4">

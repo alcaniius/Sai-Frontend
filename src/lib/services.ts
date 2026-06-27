@@ -259,8 +259,16 @@ export interface InspectionTemplate {
   name: string;
   description?: string;
   frequency: string;
+  formType?: string;
   programId?: string;
   items?: InspectionItem[];
+}
+
+export interface TemplateWithStatus extends InspectionTemplate {
+  lastRecordDate: string | null;
+  nextDueDate: string | null;
+  status: 'ON_TRACK' | 'DUE_SOON' | 'OVERDUE' | 'PENDING';
+  program?: { name: string; code: string };
 }
 
 export interface InspectionItem {
@@ -280,6 +288,7 @@ export interface InspectionRecord {
   inspectorName: string;
   supervisorName?: string;
   site?: Site;
+  template?: InspectionTemplate;
 }
 
 export interface CreateInspectionRecordInput {
@@ -304,6 +313,10 @@ export const inspectionsService = {
     const response = await api.get('/inspections/templates');
     return response.data;
   },
+  getTemplatesWithStatus: async (): Promise<TemplateWithStatus[]> => {
+    const response = await api.get('/inspections/templates/status');
+    return response.data;
+  },
   getTemplateById: async (id: string): Promise<InspectionTemplate> => {
     const response = await api.get(`/inspections/templates/${id}`);
     return response.data;
@@ -312,12 +325,21 @@ export const inspectionsService = {
     const response = await api.get('/inspections/records');
     return response.data;
   },
+  getRecordById: async (id: string): Promise<any> => {
+    const response = await api.get(`/inspections/records/${id}`);
+    return response.data;
+  },
   createRecord: async (data: CreateInspectionRecordInput): Promise<InspectionRecord> => {
     const response = await api.post('/inspections/records', data);
     return response.data;
   },
   submitResponses: async (recordId: string, data: SubmitResponsesInput) => {
     const response = await api.post(`/inspections/records/${recordId}/responses`, data);
+    return response.data;
+  },
+  createNCFromInspection: async (recordId: string, severity?: string) => {
+    const params = severity ? `?severity=${severity}` : '';
+    const response = await api.post(`/non-conformities/from-inspection/${recordId}${params}`);
     return response.data;
   },
 };
