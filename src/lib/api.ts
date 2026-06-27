@@ -21,7 +21,8 @@ api.interceptors.request.use((config) => {
   // Use user's organizationId as tenant header (fix: was using user.id which is wrong)
   // Do NOT override if caller already set X-Tenant-ID (admin per-request override)
   if (!config.headers['X-Tenant-ID']) {
-    const tenantId = state.user?.organizationId;
+    const tenantId = state.user?.organizationId
+      || process.env.NEXT_PUBLIC_DEFAULT_ORG_ID;
     if (tenantId) {
       config.headers['X-Tenant-ID'] = tenantId;
     }
