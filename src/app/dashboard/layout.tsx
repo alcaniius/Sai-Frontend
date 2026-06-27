@@ -214,7 +214,12 @@ export default function DashboardLayout({
             <div className="flex items-center space-x-4">
               {/* Theme Toggle */}
               <button
-                onClick={toggleTheme}
+                onClick={(e) => {
+                  const icon = e.currentTarget.querySelector('.theme-toggle-icon');
+                  icon?.classList.add('spinning');
+                  setTimeout(() => icon?.classList.remove('spinning'), 500);
+                  toggleTheme(e);
+                }}
                 className="relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300"
                 style={{
                   background: 'var(--sai-bg-tertiary)',
@@ -236,9 +241,9 @@ export default function DashboardLayout({
                 {!mounted ? (
                   <div className="w-5 h-5" />
                 ) : theme === 'light' ? (
-                  <Moon className="w-5 h-5" />
+                  <Moon className="w-5 h-5 theme-toggle-icon" />
                 ) : (
-                  <Sun className="w-5 h-5" />
+                  <Sun className="w-5 h-5 theme-toggle-icon" />
                 )}
               </button>
 
