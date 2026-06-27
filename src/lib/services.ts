@@ -411,3 +411,29 @@ export const programsService = {
     await api.delete(`/programs/${id}`);
   },
 };
+
+export interface NonConformity {
+  id: string;
+  title: string;
+  description: string;
+  severity: string;
+  source: string;
+  status: string;
+  relatedId?: string;
+  relatedType?: string;
+  detectedAt: string;
+  resolvedAt?: string;
+  correctiveAction?: string;
+  createdAt: string;
+}
+
+export const nonConformitiesService = {
+  getAll: async (): Promise<NonConformity[]> => {
+    const response = await api.get('/non-conformities');
+    return response.data;
+  },
+  getById: async (id: string): Promise<NonConformity> => {
+    const response = await api.get(`/non-conformities/${id}`);
+    return response.data;
+  },
+};
