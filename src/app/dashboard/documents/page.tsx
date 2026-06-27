@@ -57,7 +57,7 @@ export default function DocumentsPage() {
   const [showChecklistPicker, setShowChecklistPicker] = useState(false);
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'forms' | 'docs'>('forms');
+  const [activeTab, setActiveTab] = useState<'forms' | 'docs'>('docs');
 
   const { data: documents, isLoading: docsLoading, isError: docsError } = useQuery({
     queryKey: ['documents'],
