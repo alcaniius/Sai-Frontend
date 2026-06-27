@@ -1,41 +1,234 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ===== SAI Design Tokens ===== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --sai-bg-primary: #f8fafc;
+  --sai-bg-secondary: #ffffff;
+  --sai-bg-tertiary: #f1f5f9;
+  --sai-bg-elevated: #ffffff;
+  --sai-bg-sidebar: #ffffff;
+  --sai-bg-header: #ffffff;
+  --sai-bg-card: #ffffff;
+  --sai-bg-input: #ffffff;
+  --sai-bg-hover: #f1f5f9;
+  --sai-bg-active: #eff6ff;
+
+  /* Text */
+  --sai-text-primary: #0f172a;
+  --sai-text-secondary: #475569;
+  --sai-text-tertiary: #94a3b8;
+  --sai-text-inverse: #ffffff;
+  --sai-text-link: #2563eb;
+
+  /* Borders */
+  --sai-border: #e2e8f0;
+  --sai-border-strong: #cbd5e1;
+  --sai-border-subtle: #f1f5f9;
+
+  /* Shadows */
+  --sai-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --sai-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --sai-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+
+  /* Accent (blue) */
+  --sai-accent: #2563eb;
+  --sai-accent-light: #eff6ff;
+  --sai-accent-hover: #1d4ed8;
+  --sai-accent-text: #1e40af;
+
+  /* Status */
+  --sai-success: #16a34a;
+  --sai-success-bg: #f0fdf4;
+  --sai-warning: #ca8a04;
+  --sai-warning-bg: #fefce8;
+  --sai-danger: #dc2626;
+  --sai-danger-bg: #fef2f2;
+
+  /* Scrollbar */
+  --sai-scrollbar-bg: #f1f5f9;
+  --sai-scrollbar-thumb: #cbd5e1;
+}
+
+.dark {
+  /* Surfaces */
+  --sai-bg-primary: #090d16;
+  --sai-bg-secondary: #0f172a;
+  --sai-bg-tertiary: #1e293b;
+  --sai-bg-elevated: #1e293b;
+  --sai-bg-sidebar: #090d16;
+  --sai-bg-header: rgba(15, 23, 42, 0.8);
+  --sai-bg-card: #0f172a;
+  --sai-bg-input: #1e293b;
+  --sai-bg-hover: #1e293b;
+  --sai-bg-active: rgba(59, 130, 246, 0.15);
+
+  /* Text */
+  --sai-text-primary: #f8fafc;
+  --sai-text-secondary: #94a3b8;
+  --sai-text-tertiary: #64748b;
+  --sai-text-inverse: #090d16;
+  --sai-text-link: #60a5fa;
+
+  /* Borders */
+  --sai-border: #1e293b;
+  --sai-border-strong: #334155;
+  --sai-border-subtle: #0f172a;
+
+  /* Shadows */
+  --sai-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --sai-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.6), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+  --sai-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7), 0 4px 6px -4px rgb(0 0 0 / 0.6);
+
+  /* Accent */
+  --sai-accent: #3b82f6;
+  --sai-accent-light: rgba(59, 130, 246, 0.1);
+  --sai-accent-hover: #60a5fa;
+  --sai-accent-text: #93c5fd;
+
+  /* Status */
+  --sai-success: #22c55e;
+  --sai-success-bg: #052e16;
+  --sai-warning: #eab308;
+  --sai-warning-bg: #422006;
+  --sai-danger: #ef4444;
+  --sai-danger-bg: #450a0a;
+
+  /* Scrollbar */
+  --sai-scrollbar-bg: #1e293b;
+  --sai-scrollbar-thumb: #475569;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--sai-bg-primary);
+  --color-foreground: var(--sai-text-primary);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ===== Base Styles ===== */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--sai-bg-primary);
+  color: var(--sai-text-primary);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Input placeholders más visibles */
+/* ===== Form Inputs ===== */
 input::placeholder,
 textarea::placeholder,
 select::placeholder {
-  color: #6b7280;
+  color: var(--sai-text-tertiary);
   opacity: 1;
 }
 
-/* Input text explícitamente oscuro */
 input,
 textarea,
 select {
-  color: #111827;
+  color: var(--sai-text-primary);
+  background-color: var(--sai-bg-input);
+  border-color: var(--sai-border);
 }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--sai-scrollbar-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sai-scrollbar-thumb);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sai-text-tertiary);
+}
+
+/* ===== Theme Transition ===== */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* Disable transitions on theme toggle animation to prevent jank */
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition-duration: 0s !important;
+}
+
+/* ===== Tailwind Dark Mode Automatic Overrides ===== */
+.dark .bg-white {
+  background-color: var(--sai-bg-secondary) !important;
+}
+.dark .text-gray-900 {
+  color: var(--sai-text-primary) !important;
+}
+.dark .text-gray-800 {
+  color: var(--sai-text-primary) !important;
+}
+.dark .text-gray-700 {
+  color: var(--sai-text-secondary) !important;
+}
+.dark .text-gray-600 {
+  color: var(--sai-text-secondary) !important;
+}
+.dark .text-gray-500 {
+  color: var(--sai-text-tertiary) !important;
+}
+.dark .text-gray-400 {
+  color: var(--sai-text-tertiary) !important;
+}
+
+/* Borders */
+.dark .border-gray-100 {
+  border-color: var(--sai-border-subtle) !important;
+}
+.dark .border-gray-200 {
+  border-color: var(--sai-border) !important;
+}
+.dark .border-gray-300 {
+  border-color: var(--sai-border-strong) !important;
+}
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--sai-border) !important;
+}
+
+/* Hover & Interactive States */
+.dark .hover\:bg-gray-50:hover {
+  background-color: var(--sai-bg-hover) !important;
+}
+.dark .hover\:bg-gray-100:hover {
+  background-color: var(--sai-bg-hover) !important;
+}
+
+/* Specialized light alert backgrounds in quick actions */
+.dark .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+.dark .hover\:bg-blue-50:hover {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+}
+.dark .bg-green-50 {
+  background-color: rgba(34, 197, 94, 0.1) !important;
+}
+.dark .hover\:bg-green-50:hover {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+}
+.dark .bg-purple-50 {
+  background-color: rgba(168, 85, 247, 0.1) !important;
+}
+.dark .hover\:bg-purple-50:hover {
+  background-color: rgba(168, 85, 247, 0.15) !important;
+}
+.dark .border-gray-300 {
+  border-color: var(--sai-border-strong) !important;
+}
+
