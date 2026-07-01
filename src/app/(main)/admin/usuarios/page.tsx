@@ -54,7 +54,7 @@ export default function AdminUsuariosPage() {
   // Role guard: redirect non-ADMIN
   useEffect(() => {
     if (isInitialized && isAuthenticated && user?.role !== 'ADMIN') {
-      router.push('/dashboard');
+      router.push('/');
     }
   }, [isInitialized, isAuthenticated, user, router]);
 

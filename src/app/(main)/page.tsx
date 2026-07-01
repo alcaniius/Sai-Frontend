@@ -100,7 +100,7 @@ export default function DashboardPage() {
               value={totalInspections}
               sub={`${overdueInspections} vencidas · ${dueSoonInspections} próximas`}
               color="var(--sai-accent)"
-              href="/dashboard/documents"
+              href="/documents"
             />
             <KpiCard
               icon={<Award className="w-5 h-5" />}
@@ -115,7 +115,7 @@ export default function DashboardPage() {
               value={openNCs}
               sub={openNCs > 0 ? 'Abiertas' : 'Sin NC abiertas'}
               color={openNCs > 0 ? 'var(--sai-danger)' : 'var(--sai-success)'}
-              href="/dashboard/quality"
+              href="/quality"
             />
             <KpiCard
               icon={<FileText className="w-5 h-5" />}
@@ -123,7 +123,7 @@ export default function DashboardPage() {
               value={totalDocs}
               sub={`${approvedDocs} aprobados`}
               color="var(--sai-accent)"
-              href="/dashboard/documents"
+              href="/documents"
             />
           </>
         )}
@@ -137,7 +137,7 @@ export default function DashboardPage() {
               <Clock className="w-5 h-5" style={{ color: 'var(--sai-warning)' }} />
               <h2 className="font-bold" style={{ color: 'var(--sai-text-primary)' }}>Inspecciones Pendientes</h2>
             </div>
-            <Link href="/dashboard/documents" className="text-xs font-medium flex items-center gap-1 hover:underline" style={{ color: 'var(--sai-accent)' }}>
+            <Link href="/documents" className="text-xs font-medium flex items-center gap-1 hover:underline" style={{ color: 'var(--sai-accent)' }}>
               Ver todas <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
@@ -151,7 +151,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               templates?.filter(t => t.status === 'OVERDUE' || t.status === 'DUE_SOON').slice(0, 5).map((tpl) => (
-                <Link key={tpl.id} href={`/dashboard/inspections/${tpl.id}/fill`} className="flex items-center justify-between px-6 py-3 hover:bg-sai-bg-hover transition-colors block">
+                <Link key={tpl.id} href={`/inspections/${tpl.id}/fill`} className="flex items-center justify-between px-6 py-3 hover:bg-sai-bg-hover transition-colors block">
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium truncate" style={{ color: 'var(--sai-text-primary)' }}>{tpl.name}</p>
                     <p className="text-xs" style={{ color: 'var(--sai-text-tertiary)' }}>{tpl.code}</p>
@@ -220,10 +220,10 @@ export default function DashboardPage() {
 
       {/* ═══════════ Secondary KPIs ═══════════ */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-        <MiniKpi label="Aspectos Ambientales" value={totalAspects} sub={`${highSignificanceAspects} significativos`} icon={<AlertTriangle className="w-4 h-4" />} href="/dashboard/environmental/aspects" />
-        <MiniKpi label="Alertas Pendientes" value={openAlerts} sub={openAlerts > 0 ? 'Sin leer' : 'Al día'} icon={<AlertTriangle className="w-4 h-4" />} color={openAlerts > 0 ? 'var(--sai-warning)' : undefined} href="/dashboard/alerts" />
-        <MiniKpi label="Docs Aprobados" value={`${approvedDocs}/${totalDocs}`} sub="Documentos" icon={<CheckCircle className="w-4 h-4" />} href="/dashboard/documents" />
-        <MiniKpi label="Programas" value={2} sub="PGIRASA · SST" icon={<ClipboardCheck className="w-4 h-4" />} href="/dashboard/environmental" />
+        <MiniKpi label="Aspectos Ambientales" value={totalAspects} sub={`${highSignificanceAspects} significativos`} icon={<AlertTriangle className="w-4 h-4" />} href="/environmental/aspects" />
+        <MiniKpi label="Alertas Pendientes" value={openAlerts} sub={openAlerts > 0 ? 'Sin leer' : 'Al día'} icon={<AlertTriangle className="w-4 h-4" />} color={openAlerts > 0 ? 'var(--sai-warning)' : undefined} href="/alerts" />
+        <MiniKpi label="Docs Aprobados" value={`${approvedDocs}/${totalDocs}`} sub="Documentos" icon={<CheckCircle className="w-4 h-4" />} href="/documents" />
+        <MiniKpi label="Programas" value={2} sub="PGIRASA · SST" icon={<ClipboardCheck className="w-4 h-4" />} href="/environmental" />
       </div>
     </div>
   );

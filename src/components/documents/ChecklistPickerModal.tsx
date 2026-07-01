@@ -146,7 +146,7 @@ function TemplateRow({ tpl, onClose }: { tpl: TemplateWithStatus; onClose: () =>
         )}
       </div>
 
-      <Link href={`/dashboard/inspections/${tpl.id}/fill`} onClick={onClose}>
+      <Link href={`/inspections/${tpl.id}/fill`} onClick={onClose}>
         <button className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-xl text-white shadow-sm transition-all duration-200" style={{ background: 'var(--sai-success)' }}>
           <Play className="w-3.5 h-3.5" />
           Diligenciar

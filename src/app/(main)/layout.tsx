@@ -376,7 +376,7 @@ export default function DashboardLayout({
                       <p className="text-sm font-medium" style={{ color: 'var(--sai-text-primary)' }}>{user?.firstName} {user?.lastName}</p>
                       <p className="text-xs truncate" style={{ color: 'var(--sai-text-tertiary)' }}>{user?.email}</p>
                     </div>
-                    <Link href="/dashboard/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center px-4 py-2 text-sm transition-colors" style={{ color: 'var(--sai-text-secondary)' }}>
+                    <Link href="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center px-4 py-2 text-sm transition-colors" style={{ color: 'var(--sai-text-secondary)' }}>
                       <User className="w-4 h-4 mr-2" />
                       Mi Perfil
                     </Link>

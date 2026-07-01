@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/authStore';
 const mockPush = vi.fn();
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
-  usePathname: () => '/dashboard/admin/usuarios',
+  usePathname: () => '/admin/usuarios',
 }));
 
 // Import the page AFTER mocks are set up
@@ -24,7 +24,7 @@ describe('AdminUsuariosPage', () => {
     });
   });
 
-  it('should redirect non-ADMIN users to /dashboard', () => {
+  it('should redirect non-ADMIN users to /', () => {
     // Set up a MANAGER user
     useAuthStore.setState({
       user: {
@@ -41,10 +41,10 @@ describe('AdminUsuariosPage', () => {
     });
 
     render(<AdminUsuariosPage />);
-    expect(mockPush).toHaveBeenCalledWith('/dashboard');
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 
-  it('should redirect USER to /dashboard', () => {
+  it('should redirect USER to /', () => {
     useAuthStore.setState({
       user: {
         id: 'u2',
@@ -59,10 +59,10 @@ describe('AdminUsuariosPage', () => {
     });
 
     render(<AdminUsuariosPage />);
-    expect(mockPush).toHaveBeenCalledWith('/dashboard');
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 
-  it('should redirect AUDITOR to /dashboard', () => {
+  it('should redirect AUDITOR to /', () => {
     useAuthStore.setState({
       user: {
         id: 'u3',
@@ -77,7 +77,7 @@ describe('AdminUsuariosPage', () => {
     });
 
     render(<AdminUsuariosPage />);
-    expect(mockPush).toHaveBeenCalledWith('/dashboard');
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 
   it('should allow ADMIN to access the page', () => {

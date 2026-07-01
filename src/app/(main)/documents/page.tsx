@@ -294,7 +294,7 @@ export default function DocumentsPage() {
         </div>
       </div>
 
-      <Link href={`/dashboard/inspections/${tpl.id}/fill`}>
+      <Link href={`/inspections/${tpl.id}/fill`}>
         <button
           className="inline-flex items-center px-5 py-2.5 text-sm font-bold rounded-xl transition-all duration-200 text-white shadow-sm"
           style={{ background: 'var(--sai-success)' }}

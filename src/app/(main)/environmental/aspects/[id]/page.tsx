@@ -30,7 +30,7 @@ export default function AspectEditPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['aspects'] });
-      router.push('/dashboard/environmental/aspects');
+      router.push('/environmental/aspects');
     },
     onError: (error: any) => {
       setErrorMsg(error?.response?.data?.message || 'Error al guardar el aspecto.');

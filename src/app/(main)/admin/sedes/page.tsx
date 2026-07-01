@@ -8,7 +8,7 @@ export default function AdminSedesRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/dashboard/admin/organizaciones');
+    router.replace('/admin/organizaciones');
   }, [router]);
 
   return (

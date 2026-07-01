@@ -103,7 +103,7 @@ export default function FillInspectionPage() {
 
       await inspectionsService.submitResponses(record.id, { responses: responsesArray });
       
-      router.push('/dashboard/documents');
+      router.push('/documents');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Error al guardar el registro');
       setSubmitting(false);

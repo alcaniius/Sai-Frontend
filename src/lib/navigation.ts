@@ -26,14 +26,14 @@ export interface NavigationItem {
 }
 
 export const navigation: NavigationItem[] = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, roles: [Role.USER, Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
-  { name: 'Documentos', href: '/dashboard/documents', icon: FileText, roles: [Role.USER, Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
-  { name: 'Ambiental', href: '/dashboard/environmental', icon: Leaf, roles: [Role.USER, Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
-  { name: 'Calidad', href: '/dashboard/quality', icon: ShieldCheck, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
-  { name: 'Educativo', href: '/dashboard/education', icon: GraduationCap, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
-  { name: 'Indicadores', href: '/dashboard/indicators', icon: BarChart3, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
-  { name: 'Usuarios', href: '/dashboard/admin/usuarios', icon: Users, roles: [Role.ADMIN], section: 'admin' },
-  { name: 'Organizaciones', href: '/dashboard/admin/organizaciones', icon: Building2, roles: [Role.ADMIN], section: 'admin' },
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: [Role.USER, Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
+  { name: 'Documentos', href: '/documents', icon: FileText, roles: [Role.USER, Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
+  { name: 'Ambiental', href: '/environmental', icon: Leaf, roles: [Role.USER, Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
+  { name: 'Calidad', href: '/quality', icon: ShieldCheck, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
+  { name: 'Educativo', href: '/education', icon: GraduationCap, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
+  { name: 'Indicadores', href: '/indicators', icon: BarChart3, roles: [Role.MANAGER, Role.ADMIN, Role.AUDITOR], section: 'modules' },
+  { name: 'Usuarios', href: '/admin/usuarios', icon: Users, roles: [Role.ADMIN], section: 'admin' },
+  { name: 'Organizaciones', href: '/admin/organizaciones', icon: Building2, roles: [Role.ADMIN], section: 'admin' },
 ];
 
 export function filterNavigationByRole(items: NavigationItem[], role?: Role): NavigationItem[] {

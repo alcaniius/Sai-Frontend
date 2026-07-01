@@ -78,19 +78,19 @@ export default function EnvironmentalDashboard() {
 
       {/* Navigation Modules */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Link href="/dashboard/environmental/aspects" className="block bg-white rounded-lg shadow p-6 border-l-4 border-green-500 hover:bg-gray-50 transition-colors">
+        <Link href="/environmental/aspects" className="block bg-white rounded-lg shadow p-6 border-l-4 border-green-500 hover:bg-gray-50 transition-colors">
           <Leaf className="w-8 h-8 text-green-500 mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Matriz de Aspectos</h2>
           <p className="text-gray-600 text-sm">Evalúa aspectos e impactos ambientales. Calcula significancias automáticamente.</p>
         </Link>
         
-        <Link href="/dashboard/environmental/pma" className="block bg-white rounded-lg shadow p-6 border-l-4 border-blue-500 hover:bg-gray-50 transition-colors">
+        <Link href="/environmental/pma" className="block bg-white rounded-lg shadow p-6 border-l-4 border-blue-500 hover:bg-gray-50 transition-colors">
           <FileText className="w-8 h-8 text-blue-500 mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Planes de Manejo (PMA)</h2>
           <p className="text-gray-600 text-sm">Gestiona y genera PDFs de los Planes de Manejo Ambiental.</p>
         </Link>
 
-        <Link href="/dashboard/environmental/anla" className="block bg-white rounded-lg shadow p-6 border-l-4 border-purple-500 hover:bg-gray-50 transition-colors">
+        <Link href="/environmental/anla" className="block bg-white rounded-lg shadow p-6 border-l-4 border-purple-500 hover:bg-gray-50 transition-colors">
           <Activity className="w-8 h-8 text-purple-500 mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Reportes ANLA</h2>
           <p className="text-gray-600 text-sm">Cronograma y seguimiento de reportes obligatorios.</p>

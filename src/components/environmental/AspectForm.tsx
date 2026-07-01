@@ -200,7 +200,7 @@ export const AspectForm: React.FC<AspectFormProps> = ({ initialData, onSubmit, i
 
       <div className="pt-4 flex items-center justify-between border-t border-gray-200">
         <Link
-          href="/dashboard/environmental/aspects"
+          href="/environmental/aspects"
           className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />

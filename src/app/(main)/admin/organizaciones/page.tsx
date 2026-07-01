@@ -60,7 +60,7 @@ export default function AdminOrganizacionesPage() {
   // Role guard
   useEffect(() => {
     if (isInitialized && isAuthenticated && user?.role !== 'ADMIN') {
-      router.push('/dashboard');
+      router.push('/');
     }
   }, [isInitialized, isAuthenticated, user, router]);
 

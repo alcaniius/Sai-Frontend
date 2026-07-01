@@ -51,7 +51,7 @@ export const AspectMatrix: React.FC<AspectMatrixProps> = ({ aspects, onDelete })
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex items-center justify-end space-x-3">
-                    <Link href={`/dashboard/environmental/aspects/${aspect.id}`} className="text-blue-600 hover:text-blue-900">
+                    <Link href={`/environmental/aspects/${aspect.id}`} className="text-blue-600 hover:text-blue-900">
                       <FileEdit className="w-4 h-4" />
                     </Link>
                     <button onClick={() => onDelete(aspect.id)} className="text-red-600 hover:text-red-900">
