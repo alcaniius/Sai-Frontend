@@ -381,32 +381,43 @@ export default function EducationPage() {
                 <input type="text" {...register('title')} className={inputClass} style={inputStyle} placeholder="Ej: Socialización del PGIRASA" />
                 {errors.title && <p className="text-sm mt-1" style={{ color: 'var(--sai-danger)' }}>{errors.title.message}</p>}
               </div>
-              {/* Metodología y Duración */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Metodología a utilizar</label>
-                  <input {...register('methodology')} className={inputClass} style={inputStyle} placeholder="Ej: Presencial, Virtual, Taller" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Duración</label>
-                  <input {...register('duration')} className={inputClass} style={inputStyle} placeholder="Ej: 2 horas, 1 día, 4 sesiones" />
-                </div>
-              </div>
-              {/* Responsable y Observaciones */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Responsable</label>
-                  <input {...register('responsible')} className={inputClass} style={inputStyle} placeholder="Nombre de quien dicta" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Observaciones</label>
-                  <textarea {...register('observations')} className={inputClass} style={inputStyle} rows={1} placeholder="Notas adicionales" />
-                </div>
-              </div>
-              {/* Descripción */}
+              {/* Descripción debajo del título */}
               <div>
                 <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Descripción</label>
                 <textarea {...register('description')} className={inputClass} style={inputStyle} rows={2} placeholder="Detalle de la capacitación" />
+              </div>
+              {/* Metodología y Duración — dropdowns */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Metodología a utilizar</label>
+                  <select {...register('methodology')} className={inputClass} style={inputStyle}>
+                    <option value="">Seleccionar...</option>
+                    <option value="Presencial">Presencial</option>
+                    <option value="Virtual">Virtual</option>
+                    <option value="Taller">Taller</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Duración</label>
+                  <select {...register('duration')} className={inputClass} style={inputStyle}>
+                    <option value="">Seleccionar...</option>
+                    <option value="1 hr">1 hr</option>
+                    <option value="2 hr">2 hr</option>
+                    <option value="3 hr">3 hr</option>
+                    <option value="4 hr">4 hr</option>
+                    <option value="5 hr">5 hr</option>
+                  </select>
+                </div>
+              </div>
+              {/* Responsable */}
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Responsable</label>
+                <input {...register('responsible')} className={inputClass} style={inputStyle} placeholder="Nombre de quien dicta" />
+              </div>
+              {/* Observaciones al final */}
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Observaciones</label>
+                <textarea {...register('observations')} className={inputClass} style={inputStyle} rows={2} placeholder="Notas adicionales" />
               </div>
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={() => { setShowModal(false); setEditingTraining(null); }} className="px-4 py-2 rounded-lg" style={{ background: 'var(--sai-bg-tertiary)', color: 'var(--sai-text-secondary)' }}>Cancelar</button>
