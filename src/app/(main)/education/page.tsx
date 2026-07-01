@@ -347,7 +347,7 @@ export default function EducationPage() {
       {/* Create/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
+          <div className="rounded-lg shadow-xl max-w-xl w-full mx-4" style={cardStyle}>
             <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>
                 <GraduationCap className="w-5 h-5 inline mr-2" />
@@ -358,27 +358,7 @@ export default function EducationPage() {
               </button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Título</label>
-                <input type="text" {...register('title')} className={inputClass} style={inputStyle} placeholder="Ej: Socialización del PGIRASA" />
-                {errors.title && <p className="text-sm mt-1" style={{ color: 'var(--sai-danger)' }}>{errors.title.message}</p>}
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Descripción</label>
-                <textarea {...register('description')} className={inputClass} style={inputStyle} rows={2} placeholder="Detalle de la capacitación" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Metodología a utilizar</label>
-                <input {...register('methodology')} className={inputClass} style={inputStyle} placeholder="Ej: Presencial, Virtual, Taller" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Duración</label>
-                <input {...register('duration')} className={inputClass} style={inputStyle} placeholder="Ej: 2 horas, 1 día, 4 sesiones" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Responsable</label>
-                <input {...register('responsible')} className={inputClass} style={inputStyle} placeholder="Nombre de quien dicta" />
-              </div>
+              {/* Mes y Semana — primero */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Mes</label>
@@ -395,9 +375,38 @@ export default function EducationPage() {
                 </div>
               </div>
               <input type="hidden" {...register('year', { valueAsNumber: true })} />
+              {/* Título */}
               <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Observaciones</label>
-                <textarea {...register('observations')} className={inputClass} style={inputStyle} rows={2} placeholder="Notas adicionales" />
+                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Título</label>
+                <input type="text" {...register('title')} className={inputClass} style={inputStyle} placeholder="Ej: Socialización del PGIRASA" />
+                {errors.title && <p className="text-sm mt-1" style={{ color: 'var(--sai-danger)' }}>{errors.title.message}</p>}
+              </div>
+              {/* Metodología y Duración */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Metodología a utilizar</label>
+                  <input {...register('methodology')} className={inputClass} style={inputStyle} placeholder="Ej: Presencial, Virtual, Taller" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Duración</label>
+                  <input {...register('duration')} className={inputClass} style={inputStyle} placeholder="Ej: 2 horas, 1 día, 4 sesiones" />
+                </div>
+              </div>
+              {/* Responsable y Observaciones */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Responsable</label>
+                  <input {...register('responsible')} className={inputClass} style={inputStyle} placeholder="Nombre de quien dicta" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Observaciones</label>
+                  <textarea {...register('observations')} className={inputClass} style={inputStyle} rows={1} placeholder="Notas adicionales" />
+                </div>
+              </div>
+              {/* Descripción */}
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Descripción</label>
+                <textarea {...register('description')} className={inputClass} style={inputStyle} rows={2} placeholder="Detalle de la capacitación" />
               </div>
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={() => { setShowModal(false); setEditingTraining(null); }} className="px-4 py-2 rounded-lg" style={{ background: 'var(--sai-bg-tertiary)', color: 'var(--sai-text-secondary)' }}>Cancelar</button>
