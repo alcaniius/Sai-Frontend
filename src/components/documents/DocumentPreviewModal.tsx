@@ -33,7 +33,7 @@ export function DocumentPreviewModal({ isOpen, onClose, document: doc }: Props) 
   const isPdf = doc.fileFormat === 'pdf';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="relative w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col" style={{ background: 'var(--sai-bg-card)', border: '1px solid var(--sai-border)', height: '90vh' }}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b flex-shrink-0" style={{ borderColor: 'var(--sai-border-subtle)' }}>

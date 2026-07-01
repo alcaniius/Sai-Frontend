@@ -512,7 +512,7 @@ export default function AdminOrganizacionesPage() {
 
       {/* ═══ CREATE ORG MODAL ═══ */}
       {showCreateOrgModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
             <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>Nueva Organización</h3>
@@ -545,7 +545,7 @@ export default function AdminOrganizacionesPage() {
 
       {/* ═══ EDIT ORG MODAL ═══ */}
       {editingOrg && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
             <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>Editar Organización</h3>
@@ -579,7 +579,7 @@ export default function AdminOrganizacionesPage() {
 
       {/* ═══ DELETE ORG MODAL ═══ */}
       {deletingOrg && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
             <div className="px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>Confirmar Eliminación</h3>
@@ -601,7 +601,7 @@ export default function AdminOrganizacionesPage() {
 
       {/* ═══ CREATE SITE MODAL ═══ */}
       {showCreateSiteModal && expandedOrgId && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
             <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>Nueva Sede</h3>
@@ -644,7 +644,7 @@ export default function AdminOrganizacionesPage() {
 
       {/* ═══ EDIT SITE MODAL ═══ */}
       {editingSite && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
             <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>Editar Sede</h3>
@@ -687,7 +687,7 @@ export default function AdminOrganizacionesPage() {
 
       {/* ═══ DELETE SITE MODAL ═══ */}
       {deletingSite && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
             <div className="px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>Confirmar Eliminación</h3>

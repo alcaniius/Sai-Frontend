@@ -45,7 +45,7 @@ export function ChecklistPickerModal({ isOpen, onClose, onUploadDoc, templates, 
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="relative w-full max-w-lg rounded-2xl p-6 shadow-2xl max-h-[85vh] overflow-y-auto" style={{ background: 'var(--sai-bg-card)', border: '1px solid var(--sai-border)' }}>
         <button onClick={onClose} className="absolute right-5 top-5 p-1.5 rounded-full hover:bg-sai-bg-tertiary transition-colors" style={{ color: 'var(--sai-text-secondary)' }}>
           <X className="h-5 w-5" />
