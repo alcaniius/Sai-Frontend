@@ -7,7 +7,7 @@ import { DocumentModal } from '@/components/documents/DocumentModal';
 import { InspectionDetailModal } from '@/components/documents/InspectionDetailModal';
 import { ChecklistPickerModal } from '@/components/documents/ChecklistPickerModal';
 import { DocumentPreviewModal } from '@/components/documents/DocumentPreviewModal';
-import { Plus, FileText, Calendar, CheckCircle, XCircle, Clock, FolderOpen, ClipboardList, Play, AlertTriangle, Eye, ClipboardCheck, BookOpen } from 'lucide-react';
+import { Plus, FileText, Calendar, CheckCircle, XCircle, Clock, FolderOpen, ClipboardList, Play, AlertTriangle, Eye, ClipboardCheck, BookOpen, ChevronDown, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 const statusStyles: Record<string, { bg: string; text: string }> = {
@@ -88,6 +88,7 @@ export default function DocumentsPage() {
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
   const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
   const [activeTab, setActiveTab] = useState<'forms' | 'docs'>('docs');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const { data: documents, isLoading: docsLoading, isError: docsError } = useQuery({
     queryKey: ['documents'],
@@ -373,41 +374,95 @@ export default function DocumentsPage() {
            ════════════════════════════════════════════════════════════ */}
         {activeTab === 'forms' && (
           <>
-            {/* Checklists grouped by program */}
+            {/* Checklists grouped by program — ACCORDIONS */}
             {hasPrograms && programs.map((program) => {
               const programTpls = groupedTemplates[program.id] || [];
               if (programTpls.length === 0) return null;
+              const sectionKey = `prog-${program.id}`;
+              const isExpanded = expandedSection === sectionKey;
+
               return (
-                <div key={program.id}>
-                  <div className="flex items-center gap-2 mb-3 px-1">
-                    <FolderOpen className="w-4 h-4" style={{ color: 'var(--sai-accent)' }} />
-                    <h2 className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--sai-text-secondary)' }}>
-                      {program.code} — {program.name}
-                    </h2>
-                  </div>
-                  <div className="space-y-3">
-                    {programTpls.map((tpl) => (
-                      <ChecklistCard key={tpl.id} tpl={tpl} />
-                    ))}
-                  </div>
+                <div
+                  key={program.id}
+                  className="rounded-xl overflow-hidden"
+                  style={{ background: 'var(--sai-bg-card)', boxShadow: 'var(--sai-shadow-sm)', border: '1px solid var(--sai-border)' }}
+                >
+                  {/* Accordion header */}
+                  <button
+                    onClick={() => setExpandedSection(isExpanded ? null : sectionKey)}
+                    className="w-full px-6 py-4 flex items-center gap-3 text-left transition-colors"
+                    style={{ background: isExpanded ? 'var(--sai-accent-light)' : 'var(--sai-bg-tertiary)' }}
+                    onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = 'var(--sai-bg-hover)'; }}
+                    onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = 'var(--sai-bg-tertiary)'; }}
+                  >
+                    {isExpanded ? (
+                      <ChevronDown className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--sai-accent)' }} />
+                    ) : (
+                      <ChevronRight className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--sai-text-tertiary)' }} />
+                    )}
+                    <FolderOpen className="w-5 h-5 flex-shrink-0" style={{ color: isExpanded ? 'var(--sai-accent)' : 'var(--sai-text-secondary)' }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs px-2 py-0.5 rounded font-semibold" style={{ background: 'var(--sai-accent-light)', color: 'var(--sai-accent-text)' }}>
+                          {program.code}
+                        </span>
+                        <h2 className="text-sm font-bold" style={{ color: isExpanded ? 'var(--sai-accent-text)' : 'var(--sai-text-primary)' }}>
+                          {program.name}
+                        </h2>
+                        <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--sai-border)', color: 'var(--sai-text-tertiary)' }}>
+                          {programTpls.length} formulario{programTpls.length !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Accordion body */}
+                  {isExpanded && (
+                    <div className="p-4 space-y-3" style={{ borderTop: '1px solid var(--sai-border)' }}>
+                      {programTpls.map((tpl) => (
+                        <ChecklistCard key={tpl.id} tpl={tpl} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               );
             })}
 
-            {/* Templates without program */}
+            {/* Templates without program — ACCORDION */}
             {noProgramTemplates.length > 0 && (
-              <div>
-                <div className="flex items-center gap-2 mb-3 px-1">
-                  <ClipboardList className="w-4 h-4" style={{ color: 'var(--sai-text-tertiary)' }} />
-                  <h2 className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--sai-text-secondary)' }}>
-                    Otros Formularios
-                  </h2>
-                </div>
-                <div className="space-y-3">
-                  {noProgramTemplates.map((tpl) => (
-                    <ChecklistCard key={tpl.id} tpl={tpl} />
-                  ))}
-                </div>
+              <div
+                className="rounded-xl overflow-hidden"
+                style={{ background: 'var(--sai-bg-card)', boxShadow: 'var(--sai-shadow-sm)', border: '1px solid var(--sai-border)' }}
+              >
+                <button
+                  onClick={() => setExpandedSection(expandedSection === 'otros' ? null : 'otros')}
+                  className="w-full px-6 py-4 flex items-center gap-3 text-left transition-colors"
+                  style={{ background: expandedSection === 'otros' ? 'var(--sai-accent-light)' : 'var(--sai-bg-tertiary)' }}
+                  onMouseEnter={(e) => { if (expandedSection !== 'otros') e.currentTarget.style.background = 'var(--sai-bg-hover)'; }}
+                  onMouseLeave={(e) => { if (expandedSection !== 'otros') e.currentTarget.style.background = 'var(--sai-bg-tertiary)'; }}
+                >
+                  {expandedSection === 'otros' ? (
+                    <ChevronDown className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--sai-accent)' }} />
+                  ) : (
+                    <ChevronRight className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--sai-text-tertiary)' }} />
+                  )}
+                  <ClipboardList className="w-5 h-5 flex-shrink-0" style={{ color: expandedSection === 'otros' ? 'var(--sai-accent)' : 'var(--sai-text-secondary)' }} />
+                  <div className="flex-1">
+                    <h2 className="text-sm font-bold" style={{ color: expandedSection === 'otros' ? 'var(--sai-accent-text)' : 'var(--sai-text-primary)' }}>
+                      Otros Formularios
+                    </h2>
+                    <span className="text-xs" style={{ color: 'var(--sai-text-tertiary)' }}>
+                      {noProgramTemplates.length} formulario{noProgramTemplates.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                </button>
+                {expandedSection === 'otros' && (
+                  <div className="p-4 space-y-3" style={{ borderTop: '1px solid var(--sai-border)' }}>
+                    {noProgramTemplates.map((tpl) => (
+                      <ChecklistCard key={tpl.id} tpl={tpl} />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -425,7 +480,7 @@ export default function DocumentsPage() {
               </div>
             )}
 
-            {/* ── History of filled records ── */}
+            {/* ── Historial de Formularios Diligenciados ── */}
             {hasRecords && (
               <div
                 className="rounded-xl overflow-hidden mt-4"
