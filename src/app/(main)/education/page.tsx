@@ -212,73 +212,71 @@ export default function EducationPage() {
         </div>
       )}
 
-      {/* Tabla — 12 meses */}
+      {/* Grilla — 12 meses como tarjetas */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--sai-accent)' }} />
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl" style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-md)' }}>
-          <table className="w-full min-w-[800px]">
-            <thead>
-              <tr>
-                <th className="w-24 px-3 py-3 text-left text-xs font-medium uppercase" style={{ background: 'var(--sai-bg-tertiary)', color: 'var(--sai-text-tertiary)', borderBottom: '1px solid var(--sai-border)' }}>Semana</th>
-                {MONTHS.map((month, i) => (
-                  <th
-                    key={i}
-                    colSpan={1}
-                    className="px-3 py-3 text-center text-xs font-bold uppercase"
-                    style={{ background: 'var(--sai-accent-light)', color: 'var(--sai-accent-text)', borderBottom: '1px solid var(--sai-border)', borderLeft: '1px solid var(--sai-border)' }}
+        <div className="space-y-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {MONTHS.map((monthName, monthIdx) => {
+              const month = monthIdx + 1;
+              return (
+                <div
+                  key={month}
+                  className="rounded-xl p-3"
+                  style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-sm)' }}
+                >
+                  <h3
+                    className="text-xs font-bold uppercase mb-2 pb-1.5"
+                    style={{ color: 'var(--sai-accent-text)', borderBottom: '1px solid var(--sai-border)' }}
                   >
-                    {month}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {WEEKS.map((week) => (
-                <tr key={week}>
-                  <td className="px-3 py-2 text-center text-sm font-bold" style={{ background: 'var(--sai-bg-tertiary)', color: 'var(--sai-text-secondary)', borderBottom: '1px solid var(--sai-border)' }}>
-                    Semana {week}
-                  </td>
-                  {MONTHS.map((_m, monthIdx) => {
-                    const month = monthIdx + 1;
-                    const training = getTrainingForCell(month, week);
-                    return (
-                      <td
-                        key={`${month}-${week}`}
-                        className="px-2 py-1 align-top cursor-pointer transition-colors relative group"
-                        style={{
-                          background: training ? (training.status === 'COMPLETED' ? 'var(--sai-success-bg)' : training.status === 'CANCELLED' ? 'var(--sai-bg-tertiary)' : 'var(--sai-bg-card)') : 'var(--sai-bg-card)',
-                          borderBottom: '1px solid var(--sai-border)',
-                          borderLeft: '1px solid var(--sai-border)',
-                          height: '80px',
-                          overflow: 'hidden',
-                        }}
-                        onClick={() => {
-                          if (training) {
-                            if (canManage) openEdit(training);
-                          } else if (canManage) {
-                            openCreateAt(month, week);
-                          }
-                        }}
-                      >
-                        {training ? (
-                          <>
-                            {/* Vista compacta — solo título + estado */}
-                            <div className="flex items-center gap-1 h-full">
-                              <div
-                                className="w-1.5 h-1.5 rounded-full shrink-0"
-                                style={{
-                                  background: training.status === 'COMPLETED' ? 'var(--sai-success)' : training.status === 'CANCELLED' ? 'var(--sai-text-tertiary)' : 'var(--sai-accent)',
-                                }}
-                              />
-                              <span className="text-xs font-semibold truncate leading-tight" style={{ color: 'var(--sai-text-primary)' }}>
-                                {training.title}
-                              </span>
-                            </div>
+                    {monthName}
+                  </h3>
+                  <div className="space-y-1">
+                    {WEEKS.map((week) => {
+                      const training = getTrainingForCell(month, week);
+                      return (
+                        <div
+                          key={week}
+                          className="flex items-center gap-1.5 cursor-pointer rounded px-1 py-0.5 transition-colors relative group"
+                          style={{ minHeight: '18px' }}
+                          onClick={() => {
+                            if (training) {
+                              if (canManage) openEdit(training);
+                            } else if (canManage) {
+                              openCreateAt(month, week);
+                            }
+                          }}
+                        >
+                          {/* Indicador: punto de color */}
+                          <div
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{
+                              background: training
+                                ? training.status === 'COMPLETED'
+                                  ? 'var(--sai-success)'
+                                  : training.status === 'CANCELLED'
+                                    ? 'var(--sai-text-tertiary)'
+                                    : 'var(--sai-accent)'
+                                : 'transparent',
+                              border: training ? 'none' : '1px dashed var(--sai-border)',
+                            }}
+                          />
+                          {/* Título truncado */}
+                          {training ? (
+                            <span className="text-[11px] leading-tight truncate" style={{ color: 'var(--sai-text-primary)' }}>
+                              {training.title}
+                            </span>
+                          ) : canManage ? (
+                            <span className="text-[11px] opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--sai-text-tertiary)' }}>
+                              + Agregar
+                            </span>
+                          ) : null}
 
-                            {/* Hover popover — todos los detalles */}
+                          {/* Hover popover */}
+                          {training && (
                             <div
                               className="absolute z-20 hidden group-hover:block rounded-lg shadow-xl p-3 text-xs"
                               style={{
@@ -353,27 +351,19 @@ export default function EducationPage() {
                                 </div>
                               )}
                             </div>
-                          </>
-                        ) : canManage ? (
-                          <div className="flex items-center justify-center h-full opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Plus className="w-5 h-5" style={{ color: 'var(--sai-text-tertiary)' }} />
-                          </div>
-                        ) : (
-                          <div className="flex items-center justify-center h-full">
-                            <span className="text-xs" style={{ color: 'var(--sai-border-subtle)' }}>—</span>
-                          </div>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-          {/* Trainings without specific week — show below grid */}
+          {/* Capacitaciones sin semana asignada */}
           {trainings.filter(t => !t.week).length > 0 && (
-            <div className="p-4" style={{ borderTop: '1px solid var(--sai-border)' }}>
+            <div className="rounded-xl p-4" style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-sm)' }}>
               <h3 className="text-sm font-bold mb-2" style={{ color: 'var(--sai-text-secondary)' }}>Capacitaciones sin semana asignada</h3>
               <div className="space-y-2">
                 {trainings.filter(t => !t.week).map(t => (
