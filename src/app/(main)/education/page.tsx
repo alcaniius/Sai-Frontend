@@ -247,13 +247,13 @@ export default function EducationPage() {
                     return (
                       <td
                         key={`${month}-${week}`}
-                        className="px-2 py-1 align-top cursor-pointer transition-colors relative"
+                        className="px-2 py-1 align-top cursor-pointer transition-colors relative group"
                         style={{
                           background: training ? (training.status === 'COMPLETED' ? 'var(--sai-success-bg)' : training.status === 'CANCELLED' ? 'var(--sai-bg-tertiary)' : 'var(--sai-bg-card)') : 'var(--sai-bg-card)',
                           borderBottom: '1px solid var(--sai-border)',
                           borderLeft: '1px solid var(--sai-border)',
-                          minHeight: '80px',
                           height: '80px',
+                          overflow: 'hidden',
                         }}
                         onClick={() => {
                           if (training) {
@@ -264,49 +264,98 @@ export default function EducationPage() {
                         }}
                       >
                         {training ? (
-                          <div className="text-xs">
+                          <>
+                            {/* Vista compacta — solo título + estado */}
+                            <div className="flex items-center gap-1 h-full">
+                              <div
+                                className="w-1.5 h-1.5 rounded-full shrink-0"
+                                style={{
+                                  background: training.status === 'COMPLETED' ? 'var(--sai-success)' : training.status === 'CANCELLED' ? 'var(--sai-text-tertiary)' : 'var(--sai-accent)',
+                                }}
+                              />
+                              <span className="text-xs font-semibold truncate leading-tight" style={{ color: 'var(--sai-text-primary)' }}>
+                                {training.title}
+                              </span>
+                            </div>
+
+                            {/* Hover popover — todos los detalles */}
                             <div
-                              className="p-1.5 rounded-md"
+                              className="absolute z-20 hidden group-hover:block rounded-lg shadow-xl p-3 text-xs"
                               style={{
-                                background: training.status === 'COMPLETED' ? 'rgba(34,197,94,0.15)' : training.status === 'CANCELLED' ? 'rgba(156,163,175,0.15)' : 'rgba(59,130,246,0.1)',
-                                border: `1px solid ${training.status === 'COMPLETED' ? 'var(--sai-success)' : training.status === 'CANCELLED' ? 'var(--sai-text-tertiary)' : 'var(--sai-accent)'}`,
+                                background: 'var(--sai-bg-card)',
+                                border: '1px solid var(--sai-border)',
+                                minWidth: '220px',
+                                bottom: 'calc(100% + 4px)',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
                               }}
+                              onClick={(e) => e.stopPropagation()}
                             >
-                              <div className="flex items-center justify-between gap-1">
-                                <span className="font-semibold truncate" style={{ color: 'var(--sai-text-primary)' }}>{training.title}</span>
-                                <div className="flex gap-0.5 shrink-0" onClick={(e) => e.stopPropagation()}>
-                                  {training.status === 'CANCELLED' && <X className="w-3 h-3" style={{ color: 'var(--sai-text-tertiary)' }} />}
-                                  {training.status === 'COMPLETED' && <Check className="w-3 h-3" style={{ color: 'var(--sai-success)' }} />}
-                                </div>
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="font-bold text-sm" style={{ color: 'var(--sai-text-primary)' }}>{training.title}</span>
+                                <span
+                                  className="text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase"
+                                  style={{
+                                    background: training.status === 'COMPLETED' ? 'var(--sai-success-bg)' : training.status === 'CANCELLED' ? 'var(--sai-bg-tertiary)' : 'var(--sai-accent-light)',
+                                    color: training.status === 'COMPLETED' ? 'var(--sai-success)' : training.status === 'CANCELLED' ? 'var(--sai-text-tertiary)' : 'var(--sai-accent-text)',
+                                  }}
+                                >
+                                  {training.status === 'COMPLETED' ? 'Completada' : training.status === 'CANCELLED' ? 'Cancelada' : 'Programada'}
+                                </span>
                               </div>
-                              {training.responsible && <p className="text-gray-400 leading-tight text-[10px] truncate">👤 {training.responsible}</p>}
-                              {training.duration && <p className="text-gray-500 leading-tight text-[10px] truncate">⏱ {training.duration}</p>}
-                              <div className="flex items-center gap-1 mt-1">
-                                {canManage && training.status === 'SCHEDULED' && (
-                                  <button
-                                    onClick={(e) => { e.stopPropagation(); markComplete(training); }}
-                                    className="text-xs px-1.5 py-0.5 rounded transition-colors"
-                                    style={{ background: 'var(--sai-success-bg)', color: 'var(--sai-success)' }}
-                                    title="Marcar como completada"
-                                  >
-                                    ✓
-                                  </button>
+                              {training.description && (
+                                <p className="mb-1.5 leading-relaxed" style={{ color: 'var(--sai-text-secondary)' }}>{training.description}</p>
+                              )}
+                              <div className="space-y-1">
+                                {training.methodology && (
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-medium" style={{ color: 'var(--sai-text-tertiary)' }}>Metodología:</span>
+                                    <span style={{ color: 'var(--sai-text-primary)' }}>{training.methodology}</span>
+                                  </div>
                                 )}
-                                {canManage && (
+                                {training.duration && (
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-medium" style={{ color: 'var(--sai-text-tertiary)' }}>Duración:</span>
+                                    <span style={{ color: 'var(--sai-text-primary)' }}>{training.duration}</span>
+                                  </div>
+                                )}
+                                {training.responsible && (
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-medium" style={{ color: 'var(--sai-text-tertiary)' }}>Responsable:</span>
+                                    <span style={{ color: 'var(--sai-text-primary)' }}>{training.responsible}</span>
+                                  </div>
+                                )}
+                                {training.observations && (
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-medium" style={{ color: 'var(--sai-text-tertiary)' }}>Obs.:</span>
+                                    <span style={{ color: 'var(--sai-text-primary)' }}>{training.observations}</span>
+                                  </div>
+                                )}
+                              </div>
+                              {canManage && (
+                                <div className="flex items-center gap-2 mt-2 pt-2" style={{ borderTop: '1px solid var(--sai-border)' }}>
+                                  {training.status === 'SCHEDULED' && (
+                                    <button
+                                      onClick={(e) => { e.stopPropagation(); markComplete(training); }}
+                                      className="text-xs px-2 py-1 rounded transition-colors"
+                                      style={{ background: 'var(--sai-success-bg)', color: 'var(--sai-success)' }}
+                                    >
+                                      ✓ Completar
+                                    </button>
+                                  )}
                                   <button
                                     onClick={(e) => { e.stopPropagation(); setDeletingTraining(training); }}
-                                    className="text-xs px-1.5 py-0.5 rounded transition-colors"
+                                    className="text-xs px-2 py-1 rounded transition-colors"
                                     style={{ background: 'var(--sai-danger-bg)', color: 'var(--sai-danger)' }}
-                                    title="Eliminar"
                                   >
-                                    ✕
+                                    ✕ Eliminar
                                   </button>
-                                )}
-                              </div>
+                                </div>
+                              )}
                             </div>
-                          </div>
+                          </>
                         ) : canManage ? (
-                          <div className="flex items-center justify-center h-full opacity-0 hover:opacity-100 transition-opacity">
+                          <div className="flex items-center justify-center h-full opacity-0 group-hover:opacity-100 transition-opacity">
                             <Plus className="w-5 h-5" style={{ color: 'var(--sai-text-tertiary)' }} />
                           </div>
                         ) : (
