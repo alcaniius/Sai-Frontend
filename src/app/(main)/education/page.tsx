@@ -355,7 +355,7 @@ export default function EducationPage() {
 
       {/* Create/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
           <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
             <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>
@@ -410,7 +410,7 @@ export default function EducationPage() {
 
       {/* Delete Confirm Modal */}
       {deletingTraining && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
           <div className="rounded-lg shadow-xl max-w-md w-full mx-4" style={cardStyle}>
             <div className="px-6 py-4" style={{ borderBottom: '1px solid var(--sai-border)' }}>
               <h3 className="text-lg font-semibold" style={{ color: 'var(--sai-text-primary)' }}>Confirmar Eliminación</h3>

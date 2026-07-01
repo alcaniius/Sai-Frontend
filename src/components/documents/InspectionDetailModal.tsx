@@ -130,7 +130,7 @@ export function InspectionDetailModal({ isOpen, onClose, recordId }: InspectionD
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm animate-fade-in">
       <div 
         className="relative w-full max-w-4xl rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-sai-border transition-all duration-300 transform scale-100"
         style={{ background: 'var(--sai-bg-card)', borderColor: 'var(--sai-border)' }}

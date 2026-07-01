@@ -91,7 +91,7 @@ export function DocumentModal({ isOpen, onClose, onSubmit, document, programs, t
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
       <div className="relative w-full max-w-lg rounded-lg bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
