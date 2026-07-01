@@ -13,6 +13,9 @@ import { Plus, Loader2, Check, X, Pencil, Trash2, GraduationCap, Calendar } from
 const trainingSchema = z.object({
   title: z.string().min(1, 'Requerido'),
   description: z.string().optional(),
+  methodology: z.string().optional(),
+  duration: z.string().optional(),
+  responsible: z.string().optional(),
   month: z.number().min(1).max(12),
   week: z.number().min(1).max(4).optional(),
   year: z.number(),
@@ -26,6 +29,9 @@ interface Training {
   id: string;
   title: string;
   description?: string;
+  methodology?: string;
+  duration?: string;
+  responsible?: string;
   month: number;
   week?: number;
   year: number;
@@ -122,6 +128,9 @@ export default function EducationPage() {
     setEditingTraining(training);
     setValue('title', training.title);
     setValue('description', training.description || '');
+    setValue('methodology', training.methodology || '');
+    setValue('duration', training.duration || '');
+    setValue('responsible', training.responsible || '');
     setValue('month', training.month);
     setValue('week', training.week || 1);
     setValue('year', training.year);
@@ -131,7 +140,7 @@ export default function EducationPage() {
 
   const openCreateAt = (month: number, week: number) => {
     setEditingTraining(null);
-    reset({ title: '', description: '', month, week, year, observations: '' });
+    reset({ title: '', description: '', methodology: '', duration: '', responsible: '', month, week, year, observations: '' });
     setValue('month', month);
     setValue('week', week);
     setValue('year', year);
@@ -184,7 +193,7 @@ export default function EducationPage() {
           </select>
           {canManage && (
             <button
-              onClick={() => { setEditingTraining(null); reset({ title: '', description: '', month: 1, week: 1, year, observations: '' }); setShowModal(true); }}
+              onClick={() => { setEditingTraining(null); reset({ title: '', description: '', methodology: '', duration: '', responsible: '', month: 1, week: 1, year, observations: '' }); setShowModal(true); }}
               className="px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
               style={{ background: 'var(--sai-accent)', color: 'var(--sai-text-inverse)' }}
             >
@@ -265,12 +274,13 @@ export default function EducationPage() {
                             >
                               <div className="flex items-center justify-between gap-1">
                                 <span className="font-semibold truncate" style={{ color: 'var(--sai-text-primary)' }}>{training.title}</span>
-                                <div className="flex gap-0.5" onClick={(e) => e.stopPropagation()}>
+                                <div className="flex gap-0.5 shrink-0" onClick={(e) => e.stopPropagation()}>
                                   {training.status === 'CANCELLED' && <X className="w-3 h-3" style={{ color: 'var(--sai-text-tertiary)' }} />}
                                   {training.status === 'COMPLETED' && <Check className="w-3 h-3" style={{ color: 'var(--sai-success)' }} />}
                                 </div>
                               </div>
-                              {training.description && <p className="text-gray-400 leading-tight mt-0.5 truncate">{training.description}</p>}
+                              {training.responsible && <p className="text-gray-400 leading-tight text-[10px] truncate">👤 {training.responsible}</p>}
+                              {training.duration && <p className="text-gray-500 leading-tight text-[10px] truncate">⏱ {training.duration}</p>}
                               <div className="flex items-center gap-1 mt-1">
                                 {canManage && training.status === 'SCHEDULED' && (
                                   <button
@@ -356,6 +366,18 @@ export default function EducationPage() {
               <div>
                 <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Descripción</label>
                 <textarea {...register('description')} className={inputClass} style={inputStyle} rows={2} placeholder="Detalle de la capacitación" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Metodología a utilizar</label>
+                <input {...register('methodology')} className={inputClass} style={inputStyle} placeholder="Ej: Presencial, Virtual, Taller" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Duración</label>
+                <input {...register('duration')} className={inputClass} style={inputStyle} placeholder="Ej: 2 horas, 1 día, 4 sesiones" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--sai-text-secondary)' }}>Responsable</label>
+                <input {...register('responsible')} className={inputClass} style={inputStyle} placeholder="Nombre de quien dicta" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
