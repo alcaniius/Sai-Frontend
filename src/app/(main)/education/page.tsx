@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuthStore } from '@/store/authStore';
 import { api } from '@/lib/api';
-import { Plus, Loader2, Check, X, Pencil, Trash2, GraduationCap, Calendar } from 'lucide-react';
+import { Plus, Loader2, Check, X, Pencil, Trash2, GraduationCap, Calendar, Clock, User, BookOpen, ClipboardList } from 'lucide-react';
 
 // ── Schemas ─────────────────────────────────────────────
 const trainingSchema = z.object({
@@ -159,6 +159,20 @@ export default function EducationPage() {
     return trainings.find(t => t.month === month && t.week === week);
   };
 
+  const getTrainingsForMonth = (month: number): Training[] => {
+    return trainings.filter(t => t.month === month);
+  };
+
+  const stats = {
+    total: trainings.length,
+    scheduled: trainings.filter(t => t.status === 'SCHEDULED').length,
+    completed: trainings.filter(t => t.status === 'COMPLETED').length,
+    cancelled: trainings.filter(t => t.status === 'CANCELLED').length,
+  };
+
+  const currentMonth = new Date().getMonth() + 1;
+  const isCurrentMonth = (month: number) => year === currentYear && month === currentMonth;
+
   // ── Loading ─────────────────────────────────────────────
   if (!isInitialized || !isAuthenticated) {
     return (
@@ -212,35 +226,125 @@ export default function EducationPage() {
         </div>
       )}
 
+      {/* Stats bar */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="rounded-xl p-3 flex items-center gap-3" style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-sm)' }}>
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--sai-accent-light)' }}>
+            <Calendar className="w-5 h-5" style={{ color: 'var(--sai-accent-text)' }} />
+          </div>
+          <div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--sai-text-primary)' }}>{stats.total}</div>
+            <div className="text-xs" style={{ color: 'var(--sai-text-tertiary)' }}>Total</div>
+          </div>
+        </div>
+        <div className="rounded-xl p-3 flex items-center gap-3" style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-sm)' }}>
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--sai-accent-light)' }}>
+            <div className="w-3 h-3 rounded-full" style={{ background: 'var(--sai-accent)' }} />
+          </div>
+          <div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--sai-text-primary)' }}>{stats.scheduled}</div>
+            <div className="text-xs" style={{ color: 'var(--sai-text-tertiary)' }}>Programadas</div>
+          </div>
+        </div>
+        <div className="rounded-xl p-3 flex items-center gap-3" style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-sm)' }}>
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--sai-success-bg)' }}>
+            <Check className="w-5 h-5" style={{ color: 'var(--sai-success)' }} />
+          </div>
+          <div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--sai-text-primary)' }}>{stats.completed}</div>
+            <div className="text-xs" style={{ color: 'var(--sai-text-tertiary)' }}>Completadas</div>
+          </div>
+        </div>
+        <div className="rounded-xl p-3 flex items-center gap-3" style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-sm)' }}>
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--sai-bg-tertiary)' }}>
+            <X className="w-5 h-5" style={{ color: 'var(--sai-text-tertiary)' }} />
+          </div>
+          <div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--sai-text-primary)' }}>{stats.cancelled}</div>
+            <div className="text-xs" style={{ color: 'var(--sai-text-tertiary)' }}>Canceladas</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Leyenda */}
+      <div className="flex flex-wrap items-center gap-4 text-xs px-1" style={{ color: 'var(--sai-text-secondary)' }}>
+        <span className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--sai-accent)' }} />
+          Programada
+        </span>
+        <span className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--sai-success)' }} />
+          Completada
+        </span>
+        <span className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--sai-text-tertiary)' }} />
+          Cancelada
+        </span>
+        <span className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ border: '1px dashed var(--sai-border)' }} />
+          Disponible
+        </span>
+        <span className="text-[11px] hidden sm:inline" style={{ color: 'var(--sai-text-tertiary)' }}>
+          · Pasá el mouse para ver detalles · Click para editar
+        </span>
+      </div>
+
       {/* Grilla — 12 meses como tarjetas */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--sai-accent)' }} />
+        </div>
+      ) : trainings.length === 0 ? (
+        <div className="rounded-xl p-12 text-center" style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-sm)' }}>
+          <GraduationCap className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--sai-text-tertiary)' }} />
+          <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--sai-text-primary)' }}>
+            No hay capacitaciones programadas
+          </h3>
+          <p className="text-sm" style={{ color: 'var(--sai-text-secondary)' }}>
+            {canManage ? 'Hacé clic en una semana de cualquier mes para agregar la primera capacitación.' : 'Las capacitaciones programadas aparecerán aquí.'}
+          </p>
         </div>
       ) : (
         <div className="space-y-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {MONTHS.map((monthName, monthIdx) => {
               const month = monthIdx + 1;
+              const monthTrainings = getTrainingsForMonth(month);
+              const isCurrent = isCurrentMonth(month);
               return (
                 <div
                   key={month}
-                  className="rounded-xl p-3"
-                  style={{ ...cardStyle, boxShadow: 'var(--sai-shadow-sm)' }}
+                  className="rounded-xl p-3 transition-all"
+                  style={{
+                    ...cardStyle,
+                    boxShadow: isCurrent ? 'var(--sai-shadow-md)' : 'var(--sai-shadow-sm)',
+                    borderColor: isCurrent ? 'var(--sai-accent)' : 'var(--sai-border)',
+                    borderWidth: isCurrent ? '2px' : '1px',
+                  }}
                 >
-                  <h3
-                    className="text-xs font-bold uppercase mb-2 pb-1.5"
-                    style={{ color: 'var(--sai-accent-text)', borderBottom: '1px solid var(--sai-border)' }}
-                  >
-                    {monthName}
-                  </h3>
+                  <div className="flex items-center justify-between mb-2 pb-1.5" style={{ borderBottom: '1px solid var(--sai-border)' }}>
+                    <h3
+                      className="text-xs font-bold uppercase"
+                      style={{ color: isCurrent ? 'var(--sai-accent-text)' : 'var(--sai-text-secondary)' }}
+                    >
+                      {monthName}
+                    </h3>
+                    {monthTrainings.length > 0 && (
+                      <span
+                        className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                        style={{ background: 'var(--sai-accent-light)', color: 'var(--sai-accent-text)' }}
+                      >
+                        {monthTrainings.length}
+                      </span>
+                    )}
+                  </div>
                   <div className="space-y-1">
                     {WEEKS.map((week) => {
                       const training = getTrainingForCell(month, week);
                       return (
                         <div
                           key={week}
-                          className="flex items-center gap-1.5 cursor-pointer rounded px-1 py-0.5 transition-colors relative group"
+                          className="flex items-center gap-1 cursor-pointer rounded px-1 py-0.5 transition-colors relative group"
                           style={{ minHeight: '18px' }}
                           onClick={() => {
                             if (training) {
@@ -250,6 +354,10 @@ export default function EducationPage() {
                             }
                           }}
                         >
+                          {/* Etiqueta de semana */}
+                          <span className="text-[9px] font-medium shrink-0 w-3" style={{ color: 'var(--sai-text-tertiary)' }}>
+                            S{week}
+                          </span>
                           {/* Indicador: punto de color */}
                           <div
                             className="w-2 h-2 rounded-full shrink-0"
@@ -289,7 +397,7 @@ export default function EducationPage() {
                               }}
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center justify-between mb-1">
                                 <span className="font-bold text-sm" style={{ color: 'var(--sai-text-primary)' }}>{training.title}</span>
                                 <span
                                   className="text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase"
@@ -301,31 +409,35 @@ export default function EducationPage() {
                                   {training.status === 'COMPLETED' ? 'Completada' : training.status === 'CANCELLED' ? 'Cancelada' : 'Programada'}
                                 </span>
                               </div>
+                              <div className="flex items-center gap-1 mb-2 text-[10px]" style={{ color: 'var(--sai-text-tertiary)' }}>
+                                <Calendar className="w-3 h-3" />
+                                {MONTHS[training.month - 1]} · Semana {training.week}
+                              </div>
                               {training.description && (
-                                <p className="mb-1.5 leading-relaxed" style={{ color: 'var(--sai-text-secondary)' }}>{training.description}</p>
+                                <p className="mb-2 leading-relaxed" style={{ color: 'var(--sai-text-secondary)' }}>{training.description}</p>
                               )}
-                              <div className="space-y-1">
+                              <div className="space-y-1.5">
                                 {training.methodology && (
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="font-medium" style={{ color: 'var(--sai-text-tertiary)' }}>Metodología:</span>
+                                  <div className="flex items-center gap-2">
+                                    <BookOpen className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--sai-text-tertiary)' }} />
                                     <span style={{ color: 'var(--sai-text-primary)' }}>{training.methodology}</span>
                                   </div>
                                 )}
                                 {training.duration && (
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="font-medium" style={{ color: 'var(--sai-text-tertiary)' }}>Duración:</span>
+                                  <div className="flex items-center gap-2">
+                                    <Clock className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--sai-text-tertiary)' }} />
                                     <span style={{ color: 'var(--sai-text-primary)' }}>{training.duration}</span>
                                   </div>
                                 )}
                                 {training.responsible && (
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="font-medium" style={{ color: 'var(--sai-text-tertiary)' }}>Responsable:</span>
+                                  <div className="flex items-center gap-2">
+                                    <User className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--sai-text-tertiary)' }} />
                                     <span style={{ color: 'var(--sai-text-primary)' }}>{training.responsible}</span>
                                   </div>
                                 )}
                                 {training.observations && (
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="font-medium" style={{ color: 'var(--sai-text-tertiary)' }}>Obs.:</span>
+                                  <div className="flex items-start gap-2">
+                                    <ClipboardList className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: 'var(--sai-text-tertiary)' }} />
                                     <span style={{ color: 'var(--sai-text-primary)' }}>{training.observations}</span>
                                   </div>
                                 )}
