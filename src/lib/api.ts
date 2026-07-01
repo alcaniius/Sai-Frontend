@@ -100,4 +100,12 @@ export function fetchSitesByOrg(orgId: string) {
   return api.get('/sites', { params: { organizationId: orgId } });
 }
 
+export function fetchProfile() {
+  return api.get('/users/me');
+}
+
+export function updateProfile(data: any) {
+  return api.patch('/users/me', data);
+}
+
 export default api;

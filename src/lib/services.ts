@@ -200,6 +200,13 @@ export const sitesService = {
     const response = await api.get('/sites');
     return response.data;
   },
+  getByOrg: async (orgId: string): Promise<Site[]> => {
+    const response = await api.get('/sites', {
+      params: { organizationId: orgId },
+      headers: { 'X-Tenant-ID': orgId },
+    });
+    return response.data;
+  },
 };
 
 export interface WasteRecord {
