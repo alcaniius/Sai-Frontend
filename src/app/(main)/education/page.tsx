@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuthStore } from '@/store/authStore';
 import { api } from '@/lib/api';
-import { Plus, Loader2, Check, X, Pencil, Trash2, GraduationCap, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Loader2, Check, X, Pencil, Trash2, GraduationCap, Calendar } from 'lucide-react';
 
 // ── Schemas ─────────────────────────────────────────────
 const trainingSchema = z.object({
@@ -45,7 +45,7 @@ export default function EducationPage() {
 
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
-  const [quarterStart, setQuarterStart] = useState(0); // 0 = Ene-Mar, 1 = Abr-Jun, 2 = Jul-Sep, 3 = Oct-Dic
+
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -150,15 +150,6 @@ export default function EducationPage() {
     return trainings.find(t => t.month === month && t.week === week);
   };
 
-  const quarters = [
-    { label: 'Ene - Mar 2026', months: [1, 2, 3] },
-    { label: 'Abr - Jun 2026', months: [4, 5, 6] },
-    { label: 'Jul - Sep 2026', months: [7, 8, 9] },
-    { label: 'Oct - Dic 2026', months: [10, 11, 12] },
-  ];
-
-  const currentQuarter = quarters[quarterStart];
-
   // ── Loading ─────────────────────────────────────────────
   if (!isInitialized || !isAuthenticated) {
     return (
@@ -212,18 +203,7 @@ export default function EducationPage() {
         </div>
       )}
 
-      {/* Quarter navigation */}
-      <div className="flex items-center justify-center gap-4">
-        <button onClick={() => setQuarterStart(Math.max(0, quarterStart - 1))} className="p-2 rounded-lg transition-colors" style={{ color: 'var(--sai-text-secondary)' }}>
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <span className="text-lg font-bold" style={{ color: 'var(--sai-text-primary)' }}>{quarters[quarterStart].label}</span>
-        <button onClick={() => setQuarterStart(Math.min(3, quarterStart + 1))} className="p-2 rounded-lg transition-colors" style={{ color: 'var(--sai-text-secondary)' }}>
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Calendar Grid */}
+      {/* Tabla — 12 meses */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--sai-accent)' }} />
@@ -234,14 +214,14 @@ export default function EducationPage() {
             <thead>
               <tr>
                 <th className="w-24 px-3 py-3 text-left text-xs font-medium uppercase" style={{ background: 'var(--sai-bg-tertiary)', color: 'var(--sai-text-tertiary)', borderBottom: '1px solid var(--sai-border)' }}>Semana</th>
-                {currentQuarter.months.map((m) => (
+                {MONTHS.map((month, i) => (
                   <th
-                    key={m}
+                    key={i}
                     colSpan={1}
                     className="px-3 py-3 text-center text-xs font-bold uppercase"
                     style={{ background: 'var(--sai-accent-light)', color: 'var(--sai-accent-text)', borderBottom: '1px solid var(--sai-border)', borderLeft: '1px solid var(--sai-border)' }}
                   >
-                    {MONTHS[m - 1]}
+                    {month}
                   </th>
                 ))}
               </tr>
@@ -252,7 +232,8 @@ export default function EducationPage() {
                   <td className="px-3 py-2 text-center text-sm font-bold" style={{ background: 'var(--sai-bg-tertiary)', color: 'var(--sai-text-secondary)', borderBottom: '1px solid var(--sai-border)' }}>
                     Semana {week}
                   </td>
-                  {currentQuarter.months.map((month) => {
+                  {MONTHS.map((_m, monthIdx) => {
+                    const month = monthIdx + 1;
                     const training = getTrainingForCell(month, week);
                     return (
                       <td
