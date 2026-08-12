@@ -27,7 +27,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Pasar variables de entorno para el build
-ARG NEXT_PUBLIC_API_URL=http://backsai.jjsoftech.com/api/v1
+ARG NEXT_PUBLIC_API_URL=https://backsai.jjsoftech.com/api/v1
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 # Build de Next.js
